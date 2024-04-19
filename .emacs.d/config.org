@@ -131,8 +131,8 @@ as emacs is started from i3 not from shell this adds necessary paths
 Even though org mode is preinstalled this ensures there is no org mode mismatch
 #+begin_src emacs-lisp
   (use-package org)
-  (use-package org-bullets)
-  (add-hook 'org-mode-hook 'org-bullets-mode) ;; bullets now have icons instead
+  ;;(use-package org-bullets)
+  ;;(add-hook 'org-mode-hook 'org-bullets-mode) ;; bullets now have icons instead
   (add-hook 'org-mode-hook 'org-indent-mode) ;; indents paragraphs with headings
   (setq org-startup-with-inline-images t) ;; does what it says on the tin
 #+end_src
