@@ -839,7 +839,26 @@ This needs several dependencies
 
 ** magit
 #+begin_src emacs-lisp
-  (use-package magit)
+    (use-package magit)
+    (use-package tramp
+      :config
+      (add-to-list 'tramp-methods
+                   '("yadm"
+                     (tramp-login-program "yadm")
+                     (tramp-login-args (("enter")))
+                     (tramp-login-env (("SHELL") ("/bin/sh")))
+                     (tramp-remote-shell "/bin/sh")
+                     (tramp-remote-shell-args ("-c")))))
+
+    (defun yadm ()
+      (interactive)
+      (magit-status "/yadm::"))
+
+  (defun magit-yadm ()
+      (interactive)
+      (magit-status "/yadm::")t
+      )
+
 #+end_src
 
 ** Personal functions
@@ -1006,10 +1025,11 @@ This needs several dependencies
 
 *** magit keybindings
 #+begin_src emacs-lisp 
-    ;; magit
-    "g g" 'magit-status
-    "g d" 'magit-dispatch
-    "g f" 'magit-file-dispatch
+  ;; magit
+  "g g" 'magit-status
+  "g d" 'magit-dispatch
+  "g f" 'magit-file-dispatch
+  "g y" 'magit-yadm
 #+end_src
 
 *** treemacs keybindings
