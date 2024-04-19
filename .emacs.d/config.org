@@ -1,0 +1,1144 @@
+#+TITLE: My Emacs Configuration
+#+PROPERTY: header-args :tangle config.el
+#+OPTIONS: toc:2
+#+STARTUP: content
+#+auto_tangle: t
+
+** TABLE OF CONTENTS                                                    :toc:
+  - [[#info][INFO]]
+  - [[#package-management][Package management]]
+  - [[#basic-changes][Basic changes]]
+  - [[#org-mode][org mode]]
+  - [[#org-babel][org babel]]
+  - [[#toc-for-org][toc for org]]
+  - [[#org-roam][org roam]]
+  - [[#org-agenda][Org agenda]]
+  - [[#org-web-tools][org-web-tools]]
+  - [[#org-download][org-download]]
+  - [[#markdown][Markdown]]
+  - [[#latex][latex]]
+  - [[#pdf-management][pdf management]]
+  - [[#nix-as-in-nixos][nix (as in nixos)]]
+  - [[#csv][csv]]
+  - [[#yaml][Yaml]]
+  - [[#theme][Theme]]
+  - [[#doom-modeline][doom modeline]]
+  - [[#evil-vim][evil vim]]
+  - [[#perspective-mode][perspective mode]]
+  - [[#emacs-as-ide][Emacs as IDE]]
+  - [[#flycheck][flycheck]]
+  - [[#flyspell-correct][flyspell-correct]]
+  - [[#aspell][aspell]]
+  - [[#irony-mode][irony mode]]
+  - [[#tree-sitter][Tree sitter]]
+  - [[#vertico][Vertico]]
+  - [[#corfu][corfu]]
+  - [[#consult][Consult]]
+  - [[#bibtex-actions][bibtex-actions]]
+  - [[#shackle][Shackle]]
+  - [[#popper][Popper]]
+  - [[#vterm][vterm]]
+  - [[#eshell][eshell]]
+  - [[#magit][magit]]
+  - [[#personal-functions][Personal functions]]
+  - [[#which-key][which key]]
+  - [[#windswap][Windswap]]
+  - [[#keybindings][Keybindings]]
+  - [[#troubleshooting][TROUBLESHOOTING]]
+
+** INFO
+This is a personal emacs config that has been inspired by using doom emacs for a long length of time.
+It only has what I currently use and I have attempted to make it easy to understand.
+But it is just a repo made for personal use.
+
+*** Org babel basics
+create source blocks with ~org-insert-structure-template~ Keybinding: ~(C-c C-,)~
+~C-c C-c~ on tangle header activates it if it isn't working.
+To edit the current source block in new buffer use ~C-c '~
+
+** Package management
+Uses straight for fast lazy loading with use-package automatically using straight
+This I will keep in the init.el for now though so it loads first.
+
+** Basic changes
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+  ;; Don't show the splash screen
+  (setq inhibit-startup-message t)
+  (setq initial-scratch-message "\
+  ;; Don't Panic
+   
+  ")
+  ;; change the look
+  (tool-bar-mode -1) ; remove tool bar
+  (scroll-bar-mode -1) ; remove scroll bar
+  (menu-bar-mode -1) ; remove menu bar
+  (global-display-line-numbers-mode 1)
+
+  ;;no dialog box
+  (setq use-dialog-box nil)
+  ;; lifes to short to type yes
+  (defalias 'yes-or-no-p 'y-or-n-p)
+
+  ;; enable recent files
+
+
+  (use-package recentf
+  :init
+  (setq
+    recentf-save-file "~/.emacs.d/recentf"
+    recentf-max-saved-items 10000
+    recentf-max-menu-items 5000
+    )
+  (recentf-mode 1))
+
+  ;;(setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+
+  ;;visual line mode
+  (global-visual-line-mode t)
+  ;; smooth scrolling (breaks org follow link by jumping to bottom of page when following)
+  (setq scroll-conservatively 101)
+#+end_src
+
+*** Set path
+as emacs is started from i3 not from shell this adds necessary paths
+#+begin_src emacs-lisp
+  (defun set-exec-path-from-shell-PATH ()
+    "Set up Emacs' `exec-path' and PATH environment variable to match
+  that used by the user's shell.
+
+  This is particularly useful under Mac OS X and macOS, where GUI
+  apps are not started from a shell."
+    (interactive)
+    (let ((path-from-shell (replace-regexp-in-string
+                "[ \t\n]*$" "" (shell-command-to-string
+                        "$SHELL --login -c 'echo $PATH'"
+                              ))))
+      (setenv "PATH" path-from-shell)
+      (setq exec-path (split-string path-from-shell path-separator))))
+
+  (set-exec-path-from-shell-PATH)
+#+end_src
+
+** org mode
+Even though org mode is preinstalled this ensures there is no org mode mismatch
+#+begin_src emacs-lisp
+  (use-package org)
+  (use-package org-bullets)
+  (add-hook 'org-mode-hook 'org-bullets-mode) ;; bullets now have icons instead
+  (add-hook 'org-mode-hook 'org-indent-mode) ;; indents paragraphs with headings
+  (setq org-startup-with-inline-images t) ;; does what it says on the tin
+#+end_src
+
+** org babel
+#+begin_src emacs-lisp
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+
+  ;; lualatex preview
+  ;;(setq org-latex-pdf-process
+  ;;  '("lualatex -shell-escape -interaction nonstopmode %f"
+  ;;    "lualatex -shell-escape -interaction nonstopmode %f"))
+
+  ;; this ensures that the  org preview math snippets are displayed
+  (setq org-preview-latex-process-alist
+         '((dvipng :programs
+  	 ("latex" "dvipng")
+  	 :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
+  	 (1.0 . 1.0)
+  	 :latex-compiler
+  	 ("dvilualatex -interaction nonstopmode -output-directory %o %F")
+  	 :image-converter
+  	 ("dvipng -D %D -T tight -o %O %F")
+  	 :transparent-image-converter
+  	 ("dvipng -D %D -T tight -bg Transparent -o %O %F"))
+   (dvisvgm :programs
+  	  ("latex" "dvisvgm")
+  	  :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+  	  (1.7 . 1.5)
+  	  :latex-compiler
+  	  ("latex -interaction nonstopmode -output-directory %o %f")
+  	  :image-converter
+  	  ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
+   (imagemagick :programs
+  	      ("latex" "convert")
+  	      :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+  	      (1.0 . 1.0)
+  	      :latex-compiler
+  	      ("pdflatex -interaction nonstopmode -output-directory %o %f")
+  	      :image-converter
+  	      ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+  ;; selects the way to create png for math snippets
+  (setq org-latex-create-formula-image-program 'dvipng)
+
+  (use-package ob-rust)
+  (use-package gnuplot)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (gnuplot . t)
+     (latex . t)
+     (shell . t)
+     (python . t)
+     (rust . t)
+     (C . t)
+     ))
+
+  ;; allows us to just put #+auto_tangle: t in the heading to tangle
+  (use-package org-auto-tangle
+    :defer t
+    :hook (org-mode . org-auto-tangle-mode))
+  ;; autcreates latex snippets pngs but hides them when on fragment for better editing
+  (use-package org-fragtog)
+  (add-hook 'org-mode-hook 'org-fragtog-mode)
+
+#+end_src
+
+** toc for org
+#+begin_src emacs-lisp
+
+  (use-package toc-org)
+  (add-hook 'org-mode-hook 'toc-org-mode)
+  (setq org-return-follows-link t)
+  ;; enable in markdown, too
+  ;;(add-hook 'markdown-mode-hook 'toc-org-mode)
+  ;;(define-key markdown-mode-map (kbd "\C-c\C-o") 'toc-org-markdown-follow-thing-at-point)
+
+#+end_src
+
+** org roam
+[[https://github.com/bastibe/org-journal][org journal github]] is not being used, instead org roam dailies
+
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :init
+    (setq org-roam-v2-ack t) ;;acknowledges that version 2 of org roam is being used
+    :custom
+    (org-roam-directory "~/Sync/org/roam/")
+    (org-roam-completion-everywhere t)
+    ;; add keybindings here
+    :config
+    (require 'org-roam-dailies)
+    (org-roam-db-autosync-mode))
+  ;; predefined tags that i can autocomplet when running org-set-tags-command 
+  (push '("nepatec") org-tag-persistent-alist)
+  (push '("own_time") org-tag-persistent-alist)
+  (push '("emacs_config") org-tag-persistent-alist)
+  (push '("leibniz") org-tag-persistent-alist)
+
+
+#+end_src
+
+** Org agenda
+#+begin_src emacs-lisp
+  (setq org-agenda-files '("~/Sync/org/roam/daily"))
+#+end_src
+
+** org-web-tools
+[[https://github.com/alphapapa/org-web-tools][github link]]
+Allows us to download html into an org format
+#+begin_src emacs-lisp
+  ;; org-web-tools--url-as-readable-org 
+  (use-package org-web-tools)
+  
+#+end_src
+
+** org-download
+#+begin_src emacs-lisp
+  ;; paste image to org file
+  (use-package org-download)
+  (setq-default org-download-image-dir "~/Sync/org/images/")
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  ;;use org-download-clipboard to save clipboard image and then link to it from org file
+  ;;org-download-yank to download file whose address is stored in kill ring
+#+end_src
+
+** Markdown
+#+begin_src emacs-lisp
+  ;; hide/show markup 
+   (defvar nb/current-line '(0 . 0)
+     "(start . end) of current line in current buffer")
+   (make-variable-buffer-local 'nb/current-line)
+
+  (defun nb/unhide-current-line (limit)
+    "Font-lock function"
+    (let ((start (max (point) (car nb/current-line)))
+          (end (min limit (cdr nb/current-line))))
+      (when (< start end)
+        (remove-text-properties start end
+                        '(invisible t display "" composition ""))
+        (goto-char limit)
+        t)))
+
+  (defun nb/refontify-on-linemove ()
+    "Post-command-hook"
+    (let* ((start (line-beginning-position))
+           (end (line-beginning-position 2))
+           (needs-update (not (equal start (car nb/current-line)))))
+      (setq nb/current-line (cons start end))
+      (when needs-update
+        (font-lock-fontify-block 3))))
+
+  (defun nb/markdown-unhighlight ()
+    "Enable markdown concealling"
+    (interactive)
+    (markdown-toggle-markup-hiding 'toggle)
+    (font-lock-add-keywords nil '((nb/unhide-current-line)) t)
+    (add-hook 'post-command-hook #'nb/refontify-on-linemove nil t))
+
+  (add-hook 'markdown-mode-hook #'nb/markdown-unhighlight)
+
+  ;; scale headings
+  (setq markdown-header-scaling t)
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(markdown-header-face-1 ((t (:inherit markdown-header-face :foreground "green" :height 1.4))))
+   '(markdown-header-face-2 ((t (:inherit markdown-header-face :foreground "light green" :height 1.2))))
+   '(markdown-header-face-3 ((t (:inherit markdown-header-face :foreground "dark orange" :height 1.0))))
+   '(markdown-header-face-4 ((t (:inherit markdown-header-face :foreground "dark cyan" :height 1.0)))))
+#+end_src
+
+** latex
+This took a while to get working, currently I write in org and supplement with an org file that has the packages and such I need
+I then use my custom ~make-pdf-pls~ function to make a pdf out of it
+#+begin_src emacs-lisp
+  (use-package latex-preview-pane)
+  (setq pdf-latex-command "lualatex")
+  (use-package auctex) ;; https://www.gnu.org/software/auctex/manual/auctex.html#Inserting-macros
+  ;; use C-c C-c bibtex to load biblatex
+  ;; use M-p to update/load/generate preview of pdf
+#+end_src
+
+Don't ask if I want to reload the pdf if there is a new one, I do.
+#+begin_src emacs-lisp
+(setq revert-without-query '(".pdf"))
+#+end_src
+
+#+begin_src emacs-lisp
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (setq TeX-engine 'luatex)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;(setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
+  (setq org-latex-compiler "luatex") 
+  ;; stackoverflow link to how this works, but basically allows me to create latex from org mode
+  ;; https://tex.stackexchange.com/questions/54205/org-mode-export-to-latex-temptation-or-nuisance
+  (with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+             '("w-arbeit"
+               "\\documentclass{article}
+           [NO-DEFAULT-PACKAGES]
+           [PACKAGES]
+           [EXTRA]"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+ #+end_src
+
+*** org mode export with latexmk
+I want to export using lualatex, with latexmk to ensure the command is run the appropriate amount of times
+as latex may need to be run several times (latexmk handles this) but also the correct latex format/engine is used
+therefore lualatex 
+#+begin_src emacs-lisp
+ (setq org-latex-pdf-process (list "latexmk -f -pdflua -bibtex -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+
+** pdf management
+#+begin_src emacs-lisp
+  ;; setq doc-view-resolution 300
+  (use-package doc-view
+    :straight (:type built-in)
+    :config
+    (setq doc-view-resolution 300))
+#+end_src
+
+** nix (as in nixos)
+#+begin_src emacs-lisp
+  (use-package nix-mode
+  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+#+end_src
+
+** csv
+#+begin_src emacs-lisp
+  (use-package csv-mode)
+  ;; (use-package color)
+
+  ;; (defun csv-highlight (&optional separator)
+  ;;   (interactive (list (when current-prefix-arg (read-char "Separator: "))))
+  ;;   (font-lock-mode 1)
+  ;;   (let* ((separator (or separator ?\,))
+  ;;          (n (count-matches (string separator) (pos-bol) (pos-eol)))
+  ;;          (colors (cl-loop for i from 0 to 1.0 by (/ 2.0 n)
+  ;;                           collect (apply #'color-rgb-to-hex 
+  ;;                                          (color-hsl-to-rgb i 0.3 0.5)))))
+  ;;     (cl-loop for i from 2 to n by 2 
+  ;;              for c in colors
+  ;;              for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
+  ;;              do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
+
+
+  ;(add-hook 'csv-mode-hook 'csv-highlight)
+  ;(add-hook 'csv-mode-hook 'csv-align-mode)
+#+end_src
+
+** Yaml
+#+begin_src emacs-lisp
+  (use-package yaml-mode)
+  (add-hook 'yaml-mode-hook
+            (lambda ()
+              (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
+#+end_src
+
+** Theme
+#+begin_src emacs-lisp 
+  ;; theme
+  (use-package doom-themes) ;; https://github.com/doomemacs/themes/tree/screenshots
+  (use-package color-theme-sanityinc-tomorrow)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config)
+#+end_src
+
+** doom modeline
+https://github.com/seagle0128/doom-modeline
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+     :ensure t
+     :init (doom-modeline-mode 1))
+#+end_src
+
+** evil vim
+#+begin_src emacs-lisp 
+    ;; https://github.com/emacs-evil/evil
+  (setq evil-want-keybinding nil) ;; warning if not present
+  (setq evil-respect-visual-line-mode t)
+  (use-package evil
+       :init (setq evil-want-C-i-jump nil)
+       :config (evil-mode))
+  (setq evil-want-c-i-jump t)
+  (evil-select-search-module 'evil-search-module 'evil-search) ;; allows for search history
+
+  ;; required packages
+  (use-package goto-chg)
+  (require 'evil)
+  (evil-mode 1)
+  (with-eval-after-load 'evil-maps
+    (define-key evil-motion-state-map (kbd "SPC") nil)
+    (define-key evil-motion-state-map (kbd "RET") nil))
+#+end_src
+*** evil collection
+#+begin_src emacs-lisp
+  ;; enhanced compatibility with certain programms such as vterm https://github.com/emacs-evil/evil-collection
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init)) ;; there is a more precise way of enabling this, this enables for all
+#+end_src
+
+** perspective mode
+
+- ~s~          : persp-switch: Query a perspective to switch to, or create
+- ~`~          : persp-switch-by-number: Switch to perspective by number, or switch quickly using numbers 1, 2, 3.. 0 as prefix args; note this will probably be most useful with persp-sort set to 'created
+- ~k~          : persp-remove-buffer: Query a buffer to remove from current perspective
+- ~c~          : persp-kill : Query a perspective to kill
+- ~r~          : persp-rename: Rename current perspective
+- ~a~          : persp-add-buffer: Query an open buffer to add to current perspective
+- ~A~          : persp-set-buffer: Add buffer to current perspective and remove it from all others
+- ~b~          : persp-switch-to-buffer: Like switch-to-buffer; includes all buffers from all perspectives; changes perspective if necessary
+- ~i~          : persp-import: Import a given perspective from another frame.
+- ~n, <right>~ : persp-next: Switch to next perspective
+- ~p, <left>~  : persp-prev: Switch to previous perspective
+- ~m~          : persp-merge: Temporarily merge the buffers from one perspective into another
+- ~u~          : persp-unmerge: Undo the effects of a persp-merge
+- ~g~          : persp-add-buffer-to-frame-global: Add buffer to a frame-specific "global" perspective
+- ~C-s~        : persp-state-save: Save all perspectives in all frames to a file
+- ~C-l~        : persp-state-load: Load all perspectives from a file
+
+#+begin_src emacs-lisp
+(use-package perspective
+  :bind
+  ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))  ; will be changed later
+  :init
+  (persp-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package projectile)
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+#+end_src
+
+** Emacs as IDE
+[[https://ianyepan.github.io/posts/emacs-ide/][General tips on how to make emacs a good ide]]
+*** Language server protocol (lsp-mode)
+
+# arch link https://wiki.archlinux.org/title/Language_Server_Protocol
+I have disabled many annoying functions of lsp-ui
+Here a diagramm of their functions: https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/ 
+
+#+begin_src emacs-lisp
+  ;; https://emacs-lsp.github.io/lsp-mode/page/installation/
+  (use-package lsp-mode
+  :hook ((c-mode          ; clangd
+  	  c++-mode        ; clangd
+  	  c-or-c++-mode   ; clangd
+  	  java-mode       ; eclipse-jdtls
+  	  js-mode         ; ts-ls (tsserver wrapper)
+  	  js-jsx-mode     ; ts-ls (tsserver wrapper)
+  	  typescript-mode ; ts-ls (tsserver wrapper)
+  	  python-mode     ; pyright
+  	  web-mode        ; ts-ls/HTML/CSS
+  	  haskell-mode    ; haskell-language-server
+  	  rust-mode
+  	  ) . lsp-deferred)
+  :commands lsp
+  :config
+  (setq lsp-auto-guess-root t)
+  (setq lsp-log-io nil)
+  (setq lsp-restart 'auto-restart)
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-eldoc-hook nil)
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-semantic-tokens-enable nil)
+  (setq lsp-enable-folding nil)
+  (setq lsp-enable-imenu nil)
+  (setq lsp-enable-snippet nil)
+  (setq read-process-output-max (* 1024 1024)) ;; 1MB
+  (setq lsp-idle-delay 0.5))
+
+  (use-package lsp-ui
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-show-with-cursor nil)
+  (setq lsp-ui-doc-show-with-mouse t)
+  (setq lsp-ui-sideline-delay 0.05))
+  (setq lsp-lens-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-ui-sideline-enable t)
+#+end_src
+
+** flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (setq flycheck-checker-error-threshold 1200)
+#+end_src
+
+** flyspell-correct
+#+begin_src emacs-lisp
+  (use-package flyspell-correct)
+ #+end_src
+** aspell
+#+begin_src emacs-lisp
+  (use-package flycheck-aspell)
+  (setq ispell-dictionary "de")
+  (setq ispell-program-name "aspell")
+  (setq ispell-silently-savep t)
+  ;; Because Aspell does not support Org syntax, the user has
+  ;; to define a checker with the desired flags themselves.
+  (flycheck-aspell-define-checker "org"
+    "Org" ("--add-filter" "url")
+    (org-mode))
+  (add-to-list 'flycheck-checkers 'org-aspell-dynamic)
+  ;; checks again after adding entry to dict
+  (advice-add #'ispell-pdict-save :after #'flycheck-maybe-recheck)
+  (defun flycheck-maybe-recheck (_)
+    (when (bound-and-true-p flycheck-mode)
+     (flycheck-buffer)))
+
+  ;; disable org mode checking when first opened
+   (add-hook 'org-mode-hook (lambda () (flycheck-mode 0)))
+#+end_src
+
+*** python
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+  :hook (python-mode . (lambda () (require 'lsp-pyright)))
+  :init (when (executable-find "python3")
+          (setq lsp-pyright-python-executable-cmd "python3")))
+#+end_src
+
+*** java
+#+begin_src emacs-lisp
+  (use-package lsp-java
+  :after lsp)
+#+end_src
+
+*** rust
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :after lsp)
+#+end_src
+
+*** enable docker syntax highlighting
+#+begin_src emacs-lisp
+  (use-package dockerfile-mode)
+#+end_src
+
+*** enable company -off-
+# completion framework
+# #+begin_src emacs-lisp
+#   ;; http://company-mode.github.io/
+#   (use-package company
+#   :config
+#   (add-hook 'after-init-hook 'global-company-mode))
+# #+end_src
+
+** irony mode
+run ~irony-install-server~ to use on first installation
+#+begin_src emacs-lisp
+  (use-package irony)
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+  ;; add .h files to c++ mode rather than c mode
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+
+#+end_src
+** Tree sitter
+Code is parse accurately instead of using regexp
+- perfect highlightinh
+- faster
+#+begin_src emacs-lisp
+  (use-package treesit-auto
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all))
+
+  (setq treesit-language-source-alist
+     '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+       (cmake "https://github.com/uyha/tree-sitter-cmake")
+       (css "https://github.com/tree-sitter/tree-sitter-css")
+       (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+       (go "https://github.com/tree-sitter/tree-sitter-go")
+       (html "https://github.com/tree-sitter/tree-sitter-html")
+       (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+       (json "https://github.com/tree-sitter/tree-sitter-json")
+       (make "https://github.com/alemuller/tree-sitter-make")
+       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+       (python "https://github.com/tree-sitter/tree-sitter-python")
+       (toml "https://github.com/tree-sitter/tree-sitter-toml")
+       (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+#+end_src
+
+** Vertico
+mini buffer completion
+#+begin_src emacs-lisp
+  (use-package vertico
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  ;; (setq vertico-count 20)
+
+  ;; Grow and shrink the Vertico minibuffer
+  ;; (setq vertico-resize t)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  ;; (setq vertico-cycle t)
+  )
+  ;; save history
+  (use-package savehist
+  :init
+  (savehist-mode))
+  (run-at-time nil 600 'recentf-save-list)
+
+  ;; useful configurations
+  (use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
+
+  ;; Optionally use the `orderless' completion style.
+  (use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+** corfu
+in buffer completion
+#+begin_src emacs-lisp
+  (use-package corfu
+  ;; Optional customizations
+  :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+  :bind
+  ;; this stops the REturn auto complete behaviour
+    (:map corfu-map
+          ("RET" . nil))
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
+  :init
+  (global-corfu-mode))
+#+end_src
+
+** Consult 
+provides search and navigation commands
+#+begin_src emacs-lisp
+  (use-package consult)
+#+end_src
+*** TODO add documentation
+
+** bibtex-actions
+This needs several dependencies
+[[https://github.com/emacs-citar/citar][github link]] has good documentation
+*** dependencies
+#+begin_src emacs-lisp
+  (use-package orderless)
+  ;(use-package embark)
+  (use-package marginalia)
+  ;; also consult and vertico but thos have already been installed
+  (use-package embark-consult)
+#+end_src
+
+*** main
+#+begin_src emacs-lisp
+     (use-package citar
+    :no-require
+    :custom
+    (org-cite-global-bibliography '("~/ubuntu-work/container-scanning.bib"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography)
+    ;; set processors for org cite
+    (org-cite-export-processors
+       '((latex biblatex)  
+         (t biblatex)))      ; Fallback
+    ;;:custom-face
+    ;; Have citation link faces look closer to as they were for `org-ref'
+    ;;(org-cite ((t (:foreground "DarkSeaGreen4"))))
+    ;;(org-cite-key ((t (:foreground "forest green" :slant italic))))
+
+    ;; optional: org-cite-insert is also bound to C-c C-x C-@
+    :bind
+    (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
+
+
+#+end_src
+
+** Shackle
+#+begin_src emacs-lisp
+  (use-package shackle
+    :custom
+    (shackle-rules '(
+  		   (".*vterm.*" :regexp t :popup t :select t :align bottom :size 0.4)
+                     (".*magit.*" :regexp t :popup t :select t :align right :size 0.5)))
+    :config
+    (shackle-mode t))
+#+end_src
+
+** Popper
+#+begin_src emacs-lisp
+  (use-package popper
+    :init
+    (setq popper-reference-buffers
+          '("\\*Messages\\*"
+            "Output\\*$"
+            "\\*Async Shell Command\\*"
+            help-mode
+            compilation-mode))
+    (popper-mode +1)
+    (popper-echo-mode +1))                ; For echo area hints
+#+end_src
+
+** vterm
+#+begin_src emacs-lisp
+   (use-package vterm
+   :ensure t)
+  ;; ensure that vterm has no line numbers
+  (add-hook 'vterm-mode-hook (lambda() (display-line-numbers-mode -1))) 
+  (use-package vterm-toggle)
+
+  (use-package multi-vterm
+    :config
+    (setq multi-vterm-dedicated-window-height-percent 30))
+  ;; automatically insert mode vterm
+  ;;(with-eval-after-load 'evil)
+  ;;(evil-set-initial-state 'vterm-mode 'insert))
+#+end_src
+
+** eshell
+#+begin_src emacs-lisp
+  (add-hook 'eshell-mode-hook (lambda() (display-line-numbers-mode -1))) 
+#+end_src
+
+** magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+** Personal functions
+#+begin_src emacs-lisp
+    ;; personal functions
+  (defun reload-config ()
+    (interactive)
+    (load-file "~/.emacs.d/init.el"))
+
+  (defun edit-config ()
+    (interactive)
+    (find-file "~/.emacs.d/config.org"))
+
+  (defun sudo-find-file (file-name)
+    "Like find file, but opens the file as root."
+    (interactive "FSudo Find File: ")
+    (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+      (find-file tramp-file-name)))
+
+  ;; list of all themes in use
+  (setq my_themes '(doom-one doom-one-light sanityinc-tomorrow-eighties doom-oceanic-next doom-molokai doom-laserwave doom-palenight doom-snazzy doom-wilmersdorf doom-outrun-electric doom-solarized-light doom-nord-light doom-tomorrow-day sanityinc-tomorrow-day))
+  (defvar current_theme 3)
+  (load-theme (nth current_theme my_themes) t)
+  (defvar default-dark-theme 3)
+  (defvar default-light-theme 13)
+
+
+  (defun toggle-dark-theme ()
+    (interactive)
+    (disable-theme (nth current_theme my_themes))
+    (if (= current_theme 3)
+     (setq current_theme default-light-theme) 
+     (setq current_theme default-dark-theme))
+    (load-theme (nth current_theme my_themes) t)
+    (message "%d:%s" current_theme (nth current_theme my_themes)))
+
+  (defvar changed_theme_this_session t)
+
+  (defun next-theme ()
+    (interactive)
+    (disable-theme (nth current_theme my_themes))
+    (if (< (- (length my_themes) 2) current_theme) (setq current_theme 0) (setq current_theme (+ current_theme 1)))
+    (load-theme (nth current_theme my_themes) t)
+    (message "%d:%s" current_theme (nth current_theme my_themes)))
+
+  (defun previous-theme ()
+    (interactive)
+    (disable-theme (nth current_theme my_themes))
+    (if (= current_theme 0)
+     (setq current_theme (- (length my_themes) 1 )) 
+     (setq current_theme (- current_theme 1)))
+    (load-theme (nth current_theme my_themes) t)
+    (message "%d:%s" current_theme (nth current_theme my_themes)))
+
+  (defun org-todo-tags ()
+    (interactive)
+    (org-agenda nil "M")
+    )
+
+  (defun make-pdf-pls ()
+    (interactive)
+    (org-export-dispatch "l o")
+    )
+#+end_src
+
+** which key
+#+begin_src emacs-lisp
+  ;; https://github.com/justbur/emacs-which-key
+  (use-package which-key)
+  (require 'which-key)
+  (which-key-mode)
+#+end_src
+
+** Windswap
+#+begin_src emacs-lisp
+  ;; Windmove
+  (global-set-key (kbd "C-c <left>")  'windmove-left)
+  (global-set-key (kbd "C-c <right>") 'windmove-right)
+  (global-set-key (kbd "C-c <up>")    'windmove-up)
+  (global-set-key (kbd "C-c <down>")  'windmove-down)
+  (global-set-key (kbd "C-c S-<left>")  'windmove-swap-states-left)
+  (global-set-key (kbd "C-c S-<right>")  'windmove-swap-states-right)
+  (global-set-key (kbd "C-c S-<up>")  'windmove-swap-states-up)
+  (global-set-key (kbd "C-c S-<down>")  'windmove-swap-states-down)
+  ; basically ctrl direction moves to that window, with shift moves that window there
+#+end_src
+
+** Keybindings
+#+begin_src emacs-lisp
+  ;; new keybindings
+  (use-package general
+    :after evil
+    :config
+    (general-override-mode)
+    )
+  (require 'general)
+
+#+end_src
+
+*** setting alt leader
+#+begin_src emacs-lisp
+
+  ;; changed to vertico managed M-x
+  (general-define-key
+   "M-x" 'execute-extended-command)
+#+end_src
+
+
+*** Setting space as leader for my-leader-def
+
+#+begin_src emacs-lisp
+
+  (general-create-definer my-leader-def
+    :states '(normal emacs motion)
+    :keymaps 'override
+    :prefix "SPC"
+    )
+#+end_src
+
+*** file keybindings  
+#+begin_src emacs-lisp 
+
+  ;; magit uses emacs mode so emacs is important to override magit
+  (my-leader-def
+    ;;:states '(emacs normal)
+    ;;:keymaps 'override
+    ;; files
+    "f s" 'save-buffer
+    "." 'find-file
+    "f f" 'er-sudo-edit
+    "f r" 'recentf-open
+#+end_src
+
+*** window keybindings
+#+begin_src emacs-lisp 
+    ;; window commands
+    "w d" 'evil-window-delete
+    "w s" 'evil-window-split 
+    "w v" 'evil-window-vsplit
+    "w j" 'evil-window-up
+    "w k" 'evil-window-down
+    "w h" 'evil-window-left
+    "w l" 'evil-window-right
+    "w w" 'evil-window-next
+#+end_src
+
+*** config keybindings
+#+begin_src emacs-lisp 
+  ;; config commands
+  "c r" 'reload-config
+  "c e" 'edit-config
+  "c d" 'toggle-dark-theme
+  "c n" 'next-theme
+  "c p" 'previous-theme
+#+end_src
+*** vterm keybindings
+#+begin_src emacs-lisp 
+    ;; vterm
+    "o t" 'vterm-toggle-cd
+    "o c" 'multi-vterm ;; create new vterm
+    "o n" 'multi-vterm-next ;; next vterm
+    "o p" 'multi-vterm-prev
+#+end_src
+
+*** magit keybindings
+#+begin_src emacs-lisp 
+    ;; magit
+    "g g" 'magit-status
+    "g d" 'magit-dispatch
+    "g f" 'magit-file-dispatch
+#+end_src
+
+*** treemacs keybindings
+#+begin_src emacs-lisp 
+    ;;treemacs
+    "t t" 'treemacs
+    "t DEL" 'treemacs-root-up
+    "t RET" 'treemacs-root-down
+#+end_src
+
+*** org roam keybindings
+#+begin_src emacs-lisp
+    "r n f" 'org-roam-node-find
+    "r n i" 'org-roam-node-insert
+    "r b t" 'org-roam-buffer-toggle
+    "r d y" 'org-roam-dailies-capture-yesterday
+    "r d t" 'org-roam-dailies-capture-tomorrow
+    "r d n" 'org-roam-dailies-capture-today
+    "r d g" 'org-roam-dailies-goto-today
+    "r d d" 'org-roam-dailies-goto-date
+    "m l" 'org-insert-link 
+#+end_src
+
+*** org node
+#+begin_src emacs-lisp
+    "n r f" 'org-roam-node-find
+    "n r i" 'org-roam-node-insert
+#+end_src
+
+*** org babel keybindings
+#+begin_src emacs-lisp
+    "n p" 'org-latex-preview 
+    "n b" 'org-babel-execute-buffer
+    "n s" 'org-babel-execute-src-block
+    "M-p" 'make-pdf-pls
+#+end_src
+*** Org todo/agenda
+#+begin_src emacs-lisp
+  "m t" 'org-todo
+  "m v l" 'org-todo-list
+  "m a" 'org-agenda
+  "m m" 'org-todo-tags
+  "m h" 'org-insert-heading
+  "m v t" 'org-tags-view
+  "m s" 'org-set-tags-command
+#+end_src
+
+*** Popper
+#+begin_src emacs-lisp
+    "l t" 'popper-toggle
+    "l c" 'popper-cycle
+    "l y" 'popper-toggle-type
+#+end_src
+
+*** markdown keybindings
+#+begin_src emacs-lisp
+    "b h" 'nb/markdown-unhighlight
+#+end_src
+
+*** buffer
+#+begin_src emacs-lisp
+  "b i" 'ibuffer-list-buffers
+  "b s" 'consult-buffer ;; switch buffer nicely
+#+end_src
+
+*** pers mode keybindings
+#+begin_src emacs-lisp
+    ;; perspective mode
+    "p" 'perspective-map
+#+end_src
+
+*** consult
+#+begin_src emacs-lisp
+  "x r" 'consult-ripgrep
+  "x f" 'consult-fd
+  "x l" 'consult-line
+  "x a" 'embark-act
+#+end_src
+*** spelling
+#+begin_src emacs-lisp
+  ;; perspective mode
+  "s a" 'flyspell-auto-correct-word
+  "s i" 'ispell-word
+  "s d" 'ispell-change-dictionary
+  "s m" 'flycheck-mode 
+  "s b" 'flycheck-buffer
+  "s n" 'flycheck-next-error
+  "s p" 'flycheck-previous-error
+  "s c" 'flyspell-correct-at-point
+  )
+#+end_src
+
+
+*** treemacs which key descriptors
+#+begin_src emacs-lisp 
+  ;; change which key description
+  (which-key-add-key-based-replacements
+    "SPC f" "files")
+  (which-key-add-key-based-replacements
+    "SPC c" "config")
+  (which-key-add-key-based-replacements
+    "SPC w" "window")
+  (which-key-add-key-based-replacements
+    "SPC o" "vterm")
+  (which-key-add-key-based-replacements
+    "SPC g" "magit")
+  (which-key-add-key-based-replacements
+    "SPC t" "treemacs")
+  (which-key-add-key-based-replacements
+    "SPC r" "org-roam")
+  (which-key-add-key-based-replacements
+    "SPC r d" "roam-dailies")
+  (which-key-add-key-based-replacements
+    "SPC r n" "roam node")
+  (which-key-add-key-based-replacements
+    "SPC r b" "roam buffer")
+  (which-key-add-key-based-replacements
+    "SPC b" "org-babel")
+  (which-key-add-key-based-replacements
+    "SPC x" "search")
+  (which-key-add-key-based-replacements
+    "SPC m" "org-agenda")
+  (which-key-add-key-based-replacements
+    "SPC l" "popper")
+  (which-key-add-key-based-replacements
+    "SPC n" "org-roam-node(change)")
+  (which-key-add-key-based-replacements
+    "SPC s" "Spellchecking")
+
+#+end_src
+
+** TROUBLESHOOTING
+*** SSH_Agent
+start i3m with ssh-agent i3 instead of just i3 to use the same ssh-agent for session
+**** Manjaro ssh-agent
+in manjaro i3 is started by lightdm which looks in:
+~/usr/share/xsessions/~
+
