@@ -101,10 +101,6 @@ This I will keep in the init.el for now though so it loads first.
   ;; smooth scrolling (breaks org follow link by jumping to bottom of page when following)
   (setq scroll-conservatively 101)
 
-  ;; make org mode look more modern
-  (use-package org-modern)
-  (with-eval-after-load 'org (global-org-modern-mode))
-
 #+end_src
 
 *** Set path
@@ -131,10 +127,10 @@ as emacs is started from i3 not from shell this adds necessary paths
 Even though org mode is preinstalled this ensures there is no org mode mismatch
 #+begin_src emacs-lisp
   (use-package org)
-  ;;(use-package org-bullets)
-  ;;(add-hook 'org-mode-hook 'org-bullets-mode) ;; bullets now have icons instead
   (add-hook 'org-mode-hook 'org-indent-mode) ;; indents paragraphs with headings
   (setq org-startup-with-inline-images t) ;; does what it says on the tin
+  (use-package org-sticky-header)
+  (add-hook 'org-mode-hook 'org-sticky-header-mode)
 #+end_src
 
 ** org babel
