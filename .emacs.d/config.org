@@ -61,6 +61,7 @@ Uses straight for fast lazy loading with use-package automatically using straigh
 This I will keep in the init.el for now though so it loads first.
 
 ** Basic changes
+
 #+begin_src emacs-lisp
   ;; -*- lexical-binding: t; -*-
   ;; Don't show the splash screen
@@ -99,6 +100,11 @@ This I will keep in the init.el for now though so it loads first.
   (global-visual-line-mode t)
   ;; smooth scrolling (breaks org follow link by jumping to bottom of page when following)
   (setq scroll-conservatively 101)
+
+  ;; make org mode look more modern
+  (use-package org-modern)
+  (with-eval-after-load 'org (global-org-modern-mode))
+
 #+end_src
 
 *** Set path
