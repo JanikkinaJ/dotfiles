@@ -15,6 +15,7 @@
   - [[#org-agenda][Org agenda]]
   - [[#org-web-tools][org-web-tools]]
   - [[#org-download][org-download]]
+  - [[#better-writing][Better writing]]
   - [[#markdown][Markdown]]
   - [[#latex][latex]]
   - [[#pdf-management][pdf management]]
@@ -257,6 +258,22 @@ Allows us to download html into an org format
   ;;org-download-yank to download file whose address is stored in kill ring
 #+end_src
 
+** Better writing
+*** writeroom mode
+This turns on writeroom mode which removes all unneeded visual aspects and fullscreens application
+#+begin_src emacs-lisp
+  (use-package writeroom-mode)
+  (use-package visual-fill-column)
+#+end_src
+*** writegood
+Improves the voice of writing and allows for testing of grade level and reading ease.
+Also allows checking for weasel words and passive voice irregulars
+#+begin_src emacs-lisp
+  (use-package writegood-mode)
+  (global-set-key "\C-cg" 'writegood-mode)
+  (global-set-key "\C-c\C-gg" 'writegood-grade-level)
+  (global-set-key "\C-c\C-ge" 'writegood-reading-ease)
+#+end_src
 ** Markdown
 #+begin_src emacs-lisp
   ;; hide/show markup 
