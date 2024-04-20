@@ -16,6 +16,7 @@
   - [[#org-web-tools][org-web-tools]]
   - [[#org-download][org-download]]
   - [[#better-writing][Better writing]]
+  - [[#org-transclusion][org transclusion]]
   - [[#markdown][Markdown]]
   - [[#latex][latex]]
   - [[#pdf-management][pdf management]]
@@ -273,6 +274,10 @@ Also allows checking for weasel words and passive voice irregulars
   (global-set-key "\C-cg" 'writegood-mode)
   (global-set-key "\C-c\C-gg" 'writegood-grade-level)
   (global-set-key "\C-c\C-ge" 'writegood-reading-ease)
+#+end_src
+** org transclusion
+#+begin_src emacs-lisp
+  (use-package org-transclusion) 
 #+end_src
 ** Markdown
 #+begin_src emacs-lisp
@@ -1016,6 +1021,12 @@ This needs several dependencies
     "w h" 'evil-window-left
     "w l" 'evil-window-right
     "w w" 'evil-window-next
+#+end_src
+
+*** org-transclusion
+#+begin_src emacs-lisp
+  "r t a" 'org-transclusion-add
+  "r t m" 'org-transclusion-mode
 #+end_src
 
 *** config keybindings

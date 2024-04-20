@@ -2,7 +2,7 @@
 #+STARTUP: content
 
 
-* Table of content :toc:
+* Table of contents                                                     :toc:
 - [[#introduction][Introduction]]
 - [[#emacs-config-file][Emacs config File]]
 - [[#desktoporg-file][Desktop.org File]]
