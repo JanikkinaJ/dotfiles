@@ -1,5 +1,6 @@
 #+TITLE: Config
 #+STARTUP: content
+#+PROPERTY: header-args :mkdirp yes
 
 ** Table of contents :TOC_4:
   - [[#introduction][Introduction]]
@@ -667,9 +668,8 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   #
   # Status Bar:
   #
-  bar { 
-       swaybar_command waybar
-  }
+  bar swaybar_command waybar
+
   # Read `man 5 sway-bar` for more information about this section.
   # bar {
   #     position bottom
@@ -695,9 +695,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym Print exec grimshot --notify save area  
 
   default_border pixel 2 # remove borders
-
-  include /etc/sway/config.d/*
-
+  exec waybar
 #+end_src
 
 
