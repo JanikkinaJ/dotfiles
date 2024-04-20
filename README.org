@@ -6,6 +6,7 @@
 - [[#introduction][Introduction]]
 - [[#emacs-config-file][Emacs config File]]
 - [[#desktoporg-file][Desktop.org File]]
+- [[#future-plans][Future plans]]
 
 * Introduction
 This collection of files is my attempt at creating a consolidated repeatable configuration for my desktop setups and emacs workflows. I wrote these in org mode to allow me to consolidate all the different config files into one global file. To then write changes made in the global file I just need to save it which automatically org-babel-tangles the file therefore writing changes to all files referenced in that file. 
@@ -16,3 +17,7 @@ This is more important than the Desktop file for me at the moment as I do most o
 
 * Desktop.org [[file:.config/Desktop.org][File]]
 This file is an org mode file that sets up my window manager, which is either i3 or sway depending on the system. I will hopefully be fully converted to wayland at some point but due to nVidia driver issues this is not possible yet on my main system. This also sets up auxillary programs for these window managers such as waybar or polybar. 
+
+* Future plans
+Currently I still need to install several packages to get emacs working the way I want on a new install.
+I am planning to address this via Guix. This is a way of declaritively managing packages in the same way I am declaritively managing my emacs and can be installed alongside other package managers such as pacman.
