@@ -1,0 +1,18 @@
+#+TITLE: My Dotfiles
+#+STARTUP: content
+
+
+* Table of content :toc:
+- [[#introduction][Introduction]]
+- [[#emacs-config-file][Emacs config File]]
+- [[#desktoporg-file][Desktop.org File]]
+
+* Introduction
+This collection of files is my attempt at creating a consolidated repeatable configuration for my desktop setups and emacs workflows. I wrote these in org mode to allow me to consolidate all the different config files into one global file. To then write changes made in the global file I just need to save it which automatically org-babel-tangles the file therefore writing changes to all files referenced in that file. 
+For versioning I am using yadm as this allows me to keep these files in my home folder and still enables versioned without affecting other github repositories. 
+
+* Emacs config [[file:.emacs.d/config.org][File]] 
+This is more important than the Desktop file for me at the moment as I do most of my work within emacs. This is also written in Org mode to allow for better readability.
+
+* Desktop.org [[file:.config/Desktop.org][File]]
+This file is an org mode file that sets up my window manager, which is either i3 or sway depending on the system. I will hopefully be fully converted to wayland at some point but due to nVidia driver issues this is not possible yet on my main system. This also sets up auxillary programs for these window managers such as waybar or polybar. 
