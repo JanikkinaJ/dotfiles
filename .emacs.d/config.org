@@ -32,6 +32,7 @@
   - [[#flyspell-correct][flyspell-correct]]
   - [[#aspell][aspell]]
   - [[#irony-mode][irony mode]]
+  - [[#c-indentation][C++ indentation]]
   - [[#tree-sitter][Tree sitter]]
   - [[#vertico][Vertico]]
   - [[#corfu][corfu]]
@@ -644,6 +645,14 @@ run ~irony-install-server~ to use on first installation
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 #+end_src
+
+** C++ indentation
+#+begin_src emacs-lisp
+  (defun my-c++-mode-hook ()
+    (setq c-basic-offset 4)
+    (c-set-offset 'substatement-open 0))
+  (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+#+end_src
 ** Tree sitter
 Code is parse accurately instead of using regexp
 - perfect highlightinh
@@ -1100,6 +1109,7 @@ This needs several dependencies
   "m h" 'org-insert-heading
   "m v t" 'org-tags-view
   "m s" 'org-set-tags-command
+  "m c" 'org-toggle-checkbox
 #+end_src
 
 *** Popper
