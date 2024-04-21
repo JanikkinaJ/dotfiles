@@ -294,7 +294,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
       }
 
       # Lock screen
-      bindsym $mod+9 exec --no-startup-id blurlock
+      bindsym $mod+9 exec --no-startup-id i3lock -i /usr/share/background/sky_mountain.png
 
       # Autostart applications
       exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -308,7 +308,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
       # exec_always --no-startup-id sbxkb
       exec --no-startup-id start_conky_maia
       # exec --no-startup-id start_conky_green
-      exec --no-startup-id xidlehook --not-when-fullscreen --not-when-audio --timer normal 600 'blurlock'
+      #exec --no-startup-id xidlehook --not-when-fullscreen --not-when-audio --timer normal 600 'blurlock'
       exec_always --no-startup-id ff-theme-util
       exec_always --no-startup-id fix_xcursor
 
@@ -1011,7 +1011,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
     	ssh-add "$1" 
         fi   
     }
-    eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa)
+    eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa leibniz)
     #safe-ssh-add ~/.ssh/Github > /dev/null 
     #safe-ssh-add ~/.ssh/gitlab_nepatec > /dev/null 
     #safe-ssh-add ~/.ssh/id_rsa > /dev/null 
