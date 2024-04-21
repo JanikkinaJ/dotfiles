@@ -517,7 +517,7 @@ Here a diagramm of their functions: https://emacs-lsp.github.io/lsp-mode/tutoria
   (use-package lsp-mode
   :hook ((c-mode          ; clangd
   	  c++-mode        ; clangd
-  	  c-or-c++-mode   ; clangd
+  	  ;;c-or-c++-mode   ; clangd
   	  java-mode       ; eclipse-jdtls
   	  js-mode         ; ts-ls (tsserver wrapper)
   	  js-jsx-mode     ; ts-ls (tsserver wrapper)
@@ -632,6 +632,7 @@ Here a diagramm of their functions: https://emacs-lsp.github.io/lsp-mode/tutoria
 ** irony mode
 run ~irony-install-server~ to use on first installation
 #+begin_src emacs-lisp
+  ;; c++-ts-mode is used due to treesitter
   (use-package irony)
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
@@ -639,18 +640,18 @@ run ~irony-install-server~ to use on first installation
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
   ;; add .h files to c++ mode rather than c mode
+  ;;(remove-hook 'c++-ts-mode-hook ')
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
-
 #+end_src
 ** Tree sitter
 Code is parse accurately instead of using regexp
 - perfect highlightinh
 - faster
 #+begin_src emacs-lisp
-  (use-package treesit-auto
-    :config
-    (treesit-auto-add-to-auto-mode-alist 'all))
+  ;;(use-package treesit-auto)
+    ;;:config
+    ;;(treesit-auto-add-to-auto-mode-alist 'all))
 
   (setq treesit-language-source-alist
      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
