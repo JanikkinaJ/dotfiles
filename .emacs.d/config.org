@@ -277,9 +277,19 @@ Also allows checking for weasel words and passive voice irregulars
   (global-set-key "\C-c\C-ge" 'writegood-reading-ease)
 #+end_src
 ** org transclusion
+*** explanation
+This allows for obsidian like inclusion of parts of text from other nodes
+to use this add a transclusion block like so:
+#+begin_example org
+  ,#+transclude: [[id:ac94bd24-1f7e-4dbe-812f-526482bf304a][Name of id]]
+#+end_example
+Then run ~org-transclusion-add~
+
+*** code
 #+begin_src emacs-lisp
   (use-package org-transclusion) 
 #+end_src
+
 ** Markdown
 #+begin_src emacs-lisp
   ;; hide/show markup 
