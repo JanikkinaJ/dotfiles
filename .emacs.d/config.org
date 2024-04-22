@@ -1076,15 +1076,17 @@ This needs several dependencies
 
 *** org roam keybindings
 #+begin_src emacs-lisp
-    "r n f" 'org-roam-node-find
-    "r n i" 'org-roam-node-insert
-    "r b t" 'org-roam-buffer-toggle
-    "r d y" 'org-roam-dailies-capture-yesterday
-    "r d t" 'org-roam-dailies-capture-tomorrow
-    "r d n" 'org-roam-dailies-capture-today
-    "r d g" 'org-roam-dailies-goto-today
-    "r d d" 'org-roam-dailies-goto-date
-    "m l" 'org-insert-link 
+  "r n f" 'org-roam-node-find
+  "r n i" 'org-roam-node-insert
+  "r b t" 'org-roam-buffer-toggle
+  "r d y" 'org-roam-dailies-capture-yesterday
+  "r d t" 'org-roam-dailies-capture-tomorrow
+  "r d c" 'org-roam-dailies-capture-today
+  "r d g" 'org-roam-dailies-goto-today
+  "r d d" 'org-roam-dailies-goto-date
+  "r d n" 'org-roam-dailies-goto-next-note
+  "r d p" 'org-roam-dailies-goto-previous-note
+  "m l" 'org-insert-link 
 #+end_src
 
 *** org node
