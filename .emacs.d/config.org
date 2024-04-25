@@ -1,5 +1,5 @@
-#+TITLE: My Emacs Configuration
 #+PROPERTY: header-args :tangle config.el
+#+TITLE: My Emacs Configuration
 #+OPTIONS: toc:2
 #+STARTUP: overview
 #+auto_tangle: t
@@ -9,6 +9,7 @@
   - [[#package-management][Package management]]
   - [[#basic-changes][Basic changes]]
   - [[#org-mode][org mode]]
+  - [[#mermaid][Mermaid]]
   - [[#org-babel][org babel]]
   - [[#toc-for-org][toc for org]]
   - [[#org-capture][org capture]]
@@ -137,6 +138,18 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
   (add-hook 'org-mode-hook 'org-sticky-header-mode)
 #+end_src
 
+** Mermaid
+#+begin_src emacs-lisp 
+  (use-package ob-mermaid)
+  (setq ob-mermaid-cli-path "/home/kineye/.local/bin/mmdc")
+#+end_src
+*** Install by hand
+[[https://github.com/mermaid-js/mermaid-cli][mermaid-cli]]
+#+begin_src bash :tangle no 
+npm install -g @mermaid-js/mermaid-cli
+#+end_src
+
+
 ** org babel
 #+begin_src emacs-lisp
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
@@ -188,6 +201,7 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
      (python . t)
      (rust . t)
      (C . t)
+     (mermaid . t)
      ))
 
   ;; allows us to just put #+auto_tangle: t in the heading to tangle
@@ -1159,6 +1173,8 @@ This needs several dependencies
     "." 'find-file
     "f f" 'er-sudo-edit
     "f r" 'recentf-open
+    "f g" 'writegood-mode
+    "f w" 'writeroom-mode
 #+end_src
 
 *** window keybindings
