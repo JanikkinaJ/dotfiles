@@ -1,7 +1,7 @@
 #+TITLE: My Emacs Configuration
 #+PROPERTY: header-args :tangle config.el
 #+OPTIONS: toc:2
-#+STARTUP: content
+#+STARTUP: overview
 #+auto_tangle: t
 
 ** TABLE OF CONTENTS                                                    :toc:
@@ -11,6 +11,7 @@
   - [[#org-mode][org mode]]
   - [[#org-babel][org babel]]
   - [[#toc-for-org][toc for org]]
+  - [[#org-capture][org capture]]
   - [[#org-roam][org roam]]
   - [[#org-agenda][Org agenda]]
   - [[#org-web-tools][org-web-tools]]
@@ -211,6 +212,14 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
 
 #+end_src
 
+** org capture
+#+begin_src emacs-lisp
+  (setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
+#+end_src
 ** org roam
 [[https://github.com/bastibe/org-journal][org journal github]] is not being used, instead org roam dailies
 
@@ -251,7 +260,20 @@ This allows me to keep track of todos
   (push '("leibniz") org-tag-persistent-alist)
 
   (setq org-todo-keywords
-        '((sequence "TODO" "TODAY" "SOMEDAY" "TO-READ" "|" "DONE" )))
+      '((sequence "TODO(t)" "TODAY(T)" "CHECK(c)" "|" "DONE(d)")
+        (sequence "TO-READ(r)" "|" "FIXED(f)")
+        (sequence "|" "CANCELED(c)")))
+
+  ;; helper function
+  (defmacro xx-mu (fnc)
+  "Return function that ignores its arguments and invokes FNC."
+  `(lambda (&rest _rest)
+     (funcall ,fnc)))
+
+  (advice-add 'org-deadline       :after (xx-mu #'org-save-all-org-buffers))
+  (advice-add 'org-schedule       :after (xx-mu #'org-save-all-org-buffers))
+  (advice-add 'org-store-log-note :after (xx-mu #'org-save-all-org-buffers))
+  (advice-add 'org-todo           :after (xx-mu #'org-save-all-org-buffers))
 #+end_src
 
 **** super agenda
@@ -260,52 +282,95 @@ this improves the look of org agenda
   (use-package org-super-agenda)
   (org-super-agenda-mode 1)
 
-  (let ((org-agenda-span 'week)
-        (org-super-agenda-groups
-          '(;; Each group has an implicit boolean OR operator between its selectors.
-           (:name "TODO"  ; Optionally specify section name
-                  :time-grid t  ; Items that appear on the time grid
-                  :todo "TODO")  ; Items that have this TODO keyword
-           (:name "Important"
-                  ;; Single arguments given alone
-                  :tag "bills"
-                  :priority "A")
-           ;; Set order of multiple groups at once
-           (:order-multi (2 (:name "Shopping in town"
-                                   ;; Boolean AND group matches items that match all subgroups
-                                   :and (:tag "shopping" :tag "@town"))
-                            (:name "Food-related"
-                                   ;; Multiple args given in list with implicit OR
-                                   :tag ("food" "dinner"))
-                            (:name "Personal"
-                                   :habit t
-                                   :tag "personal")
-                            (:name "Space-related (non-moon-or-planet-related)"
-                                   ;; Regexps match case-insensitively on the entire entry
-                                   :and (:regexp ("space" "NASA")
-                                                 ;; Boolean NOT also has implicit OR between selectors
-                                                 :not (:regexp "moon" :tag "planet")))))
-           ;; Groups supply their own section names when none are given
-           (:todo "WAITING" :order 8)  ; Set order of this section
-           (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING")
-                  ;; Show this group at the end of the agenda (since it has the
-                  ;; highest number). If you specified this group last, items
-                  ;; with these todo keywords that e.g. have priority A would be
-                  ;; displayed in that group instead, because items are grouped
-                  ;; out in the order the groups are listed.
-                  :order 9)
-           (:priority<= "B"
-                        ;; Show this section after "Today" and "Important", because
-                        ;; their order is unspecified, defaulting to 0. Sections
-                        ;; are displayed lowest-number-first.
-                        :order 1)
-           ;; After the last group, the agenda will display items that didn't
-           ;; match any of these groups, with the default order position of 99
-           )))
-    (org-agenda nil "a"))
+  (use-package org-ql)
+  ;; (let ((org-agenda-span 'week)
+  ;;       (org-super-agenda-groups
+  ;;         '(;; Each group has an implicit boolean OR operator between its selectors.
+  ;;          (:name "Todo"  ; Optionally specify section name
+  ;;                 :time-grid t  ; Items that appear on the time grid
+  ;;                 :todo "TODO")  ; Items that have this TODO keyword
+  ;;          (:name "Uni"
+  ;;                 ;; Single arguments given alone
+  ;;                 :tag "leibniz")
+  ;;          ;; Groups supply their own section names when none are given
+  ;;          (:todo "WAITING" :order 8)  ; Set order of this section
+  ;;          (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-READ")
+  ;;                 ;; Show this group at the end of the agenda (since it has the
+  ;;                 ;; highest number). If you specified this group last, items
+  ;;                 ;; with these todo keywords that e.g. have priority A would be
+  ;;                 ;; displayed in that group instead, because items are grouped
+  ;;                 ;; out in the order the groups are listed.
+  ;;                 :order 9)
+  ;;          (:priority<= "B"
+  ;;                       ;; Show this section after "Today" and "Important", because
+  ;;                       ;; their order is unspecified, defaulting to 0. Sections
+  ;;                       ;; are displayed lowest-number-first.
+  ;;                       :order 1)
+  ;;          ;; After the last group, the agenda will display items that didn't
+  ;;          ;; match any of these groups, with the default order position of 99
+  ;;          )))
+  ;;   (org-agenda nil "a"))
 
 
+  (setq org-agenda-custom-commands
+        '(("z" "Super z view"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                                  :time-grid t
+                                  :date today
+                                  :todo "TODAY"
+                                  :scheduled today
+                                  :order 1)))))
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:name "Next to do"
+                                   :todo "NEXT"
+                                   :order 1)
+                            (:name "Important"
+                                   :tag "Important"
+                                   :priority "A"
+                                   :order 6)
+                            (:name "Due Today"
+                                   :deadline today
+                                   :order 2)
+                            (:name "Due Soon"
+                                   :deadline future
+                                   :order 8)
+                            (:name "Overdue"
+                                   :deadline past
+                                   :order 7)
+                            (:name "Assignments"
+                                   :tag "leibniz"
+                                   :order 10)
+                            (:name "Own time"
+                                   :tag "own_time"
+                                   :order 12)
+                            (:name "Work"
+                                   :tag "nepatec"
+                                   :order 14)
+                            (:name "Emacs"
+                                   :tag "emacs_config"
+                                   :order 13)
+                            (:name "Research"
+                                   :tag "Research"
+                                   :order 15)
+                            (:name "To read"
+                                   :tag "Read"
+                                   :order 30)
+                            (:name "Waiting"
+                                   :todo "WAITING"
+                                   :order 20)
+                            (:name "trivial"
+                                   :priority<= "C"
+                                   :tag ("Trivial" "Unimportant")
+                                   :todo ("SOMEDAY" )
+                                   :order 90)
+                            (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+  
 #+end_src
+
+#+RESULTS:
 
 ** org-web-tools
 [[https://github.com/alphapapa/org-web-tools][github link]]
