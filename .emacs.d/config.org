@@ -1088,11 +1088,10 @@ Also allows checking for weasel words and passive voice irregulars
 #+begin_src emacs-lisp
   ;; list of all themes in use
   (setq my_themes '(doom-one doom-one-light sanityinc-tomorrow-eighties doom-oceanic-next doom-molokai doom-laserwave doom-palenight doom-snazzy doom-wilmersdorf doom-outrun-electric doom-solarized-light doom-nord-light doom-tomorrow-day sanityinc-tomorrow-day))
-  (defvar current_theme 3)
-  (load-theme (nth current_theme my_themes) t)
   (defvar default-dark-theme 3)
   (defvar default-light-theme 13)
-
+  (defvar current_theme default-dark-theme)
+  (load-theme (nth current_theme my_themes) t)
 
   (defun toggle-dark-theme ()
     (interactive)
