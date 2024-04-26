@@ -3,8 +3,21 @@
 #+OPTIONS: toc:2
 #+STARTUP: show2levels
 #+auto_tangle: t
-* CONFIG
-** INFO
+* Table of contents :TOC:
+  - [[#introduction][Introduction]]
+  - [[#emacs-global-changes][Emacs global changes]]
+  - [[#org-mode][org mode]]
+  - [[#code-editor-changes][Code editor changes]]
+  - [[#normal-writing][Normal writing]]
+  - [[#terminals][Terminals]]
+  - [[#versioning][versioning]]
+  - [[#projectwindow-management][Project/window management]]
+  - [[#constraining-windows][Constraining windows]]
+  - [[#look-and-feel][Look and feel]]
+  - [[#check-personal-functions][CHECK Personal functions]]
+  - [[#keybindings][Keybindings]]
+
+** Introduction
 This is a personal emacs config that has been inspired by using doom emacs for a long length of time.
 It only has what I currently use and I have attempted to make it easy to understand.
 But it is just a repo made for personal use.
