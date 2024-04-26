@@ -14,7 +14,6 @@
   - [[#projectwindow-management][Project/window management]]
   - [[#constraining-windows][Constraining windows]]
   - [[#look-and-feel][Look and feel]]
-  - [[#check-personal-functions][CHECK Personal functions]]
   - [[#keybindings][Keybindings]]
 
 ** Introduction
@@ -66,6 +65,24 @@ To edit the current source block in new buffer use ~C-c '~
   ;; smooth scrolling (breaks org follow link by jumping to bottom of page when following)
   (setq scroll-conservatively 101)
 #+end_src
+
+**** simple functions
+#+begin_src emacs-lisp 
+  (defun reload-config ()
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+
+  (defun edit-config ()
+  (interactive)
+  (find-file "~/.emacs.d/config.org"))
+
+  (defun sudo-find-file (file-name)
+  "Like find file, but opens the file as root."
+  (interactive "FSudo Find File: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+#+end_src
+
 **** Set path
 as emacs is started from i3 not from shell this adds necessary paths
 #+begin_src emacs-lisp
@@ -231,6 +248,10 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
   (add-hook 'org-mode-hook 'org-indent-mode) ;; indents paragraphs with headings
   (setq org-startup-with-inline-images t) ;; does what it says on the tin
 
+  (defun org-todo-tags ()
+    (interactive)
+    (org-agenda nil "M")
+    )
  #+end_src
 
 *** org babel
@@ -793,6 +814,11 @@ therefore lualatex
     :straight (:type built-in)
     :config
     (setq doc-view-resolution 300))
+
+  (defun make-pdf-pls ()
+    (interactive)
+    (org-export-dispatch "l o")
+    )
 #+end_src
 
 **** CHECK python
@@ -1054,32 +1080,8 @@ Also allows checking for weasel words and passive voice irregulars
   (doom-themes-org-config)
 #+end_src
 
-*** doom modeline
-https://github.com/seagle0128/doom-modeline
+*** theme functions
 #+begin_src emacs-lisp
-  (use-package doom-modeline
-     :ensure t
-     :init (doom-modeline-mode 1))
-#+end_src
-
-** CHECK Personal functions
-Needs to be integrated into other chapters
-#+begin_src emacs-lisp
-    ;; personal functions
-  (defun reload-config ()
-    (interactive)
-    (load-file "~/.emacs.d/init.el"))
-
-  (defun edit-config ()
-    (interactive)
-    (find-file "~/.emacs.d/config.org"))
-
-  (defun sudo-find-file (file-name)
-    "Like find file, but opens the file as root."
-    (interactive "FSudo Find File: ")
-    (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
-      (find-file tramp-file-name)))
-
   ;; list of all themes in use
   (setq my_themes '(doom-one doom-one-light sanityinc-tomorrow-eighties doom-oceanic-next doom-molokai doom-laserwave doom-palenight doom-snazzy doom-wilmersdorf doom-outrun-electric doom-solarized-light doom-nord-light doom-tomorrow-day sanityinc-tomorrow-day))
   (defvar current_theme 3)
@@ -1114,16 +1116,14 @@ Needs to be integrated into other chapters
      (setq current_theme (- current_theme 1)))
     (load-theme (nth current_theme my_themes) t)
     (message "%d:%s" current_theme (nth current_theme my_themes)))
+#+end_src
 
-  (defun org-todo-tags ()
-    (interactive)
-    (org-agenda nil "M")
-    )
-
-  (defun make-pdf-pls ()
-    (interactive)
-    (org-export-dispatch "l o")
-    )
+*** doom modeline
+https://github.com/seagle0128/doom-modeline
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+     :ensure t
+     :init (doom-modeline-mode 1))
 #+end_src
 
 ** Keybindings
