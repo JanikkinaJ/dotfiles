@@ -787,6 +787,10 @@ therefore lualatex
 #+end_src
 
 **** pdf management
+To use docview ensure that latexlive is installed and if it still doesn't work install:
+- ghostscript for ~dvipdf~
+- xpdf for ~pdftotext~ 
+[[https://emacs.stackexchange.com/questions/64380/doc-view-mode-for-pdfs-not-working][stack overflow answer]]
 #+begin_src emacs-lisp
   ;; setq doc-view-resolution 300
   (use-package doc-view
