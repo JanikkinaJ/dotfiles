@@ -998,6 +998,11 @@ Also allows checking for weasel words and passive voice irregulars
 
 #+end_src
 
+#+begin_src emacs-lisp 
+  (use-package forge
+    :after magit)
+#+end_src
+
 ** Project/window management
 *** perspective mode
 
