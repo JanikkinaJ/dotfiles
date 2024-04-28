@@ -204,11 +204,11 @@ in buffer completion
 
 *** search and navigation
 **** Consult 
-provides search and navigation commands
+[[https://github.com/minad/consult][github link]]
+provides better search and navigation commands
 #+begin_src emacs-lisp
   (use-package consult)
 #+end_src
-***** TODO add documentation
 
 *** evil mode
 **** evil vim
@@ -686,6 +686,12 @@ This has been replaced
 **** TODO Dap mode
 [[https://emacs-lsp.github.io/dap-mode/page/gallery/][dap mode for debugging]]
 Vscode like debugging
+*** treemacs
+add evil mode treemacs. Can now summon helpful hydra with ~?~
+#+begin_src emacs-lisp
+  (use-package treemacs)
+  (use-package treemacs-evil)
+#+end_src
 *** flycheck
 **** description
 [[https://www.flycheck.org/en/latest/][flycheck site]]  
