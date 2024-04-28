@@ -1004,6 +1004,10 @@ Also allows checking for weasel words and passive voice irregulars
 
 #+end_src
 
+**** git forge
+This is a plugin that adds access to pull requests and issues to magit.
+[[https://github.com/magit/forge][github link]]
+[[https://magit.vc/manual/forge/Usage.html][magit forge usage guide]]
 #+begin_src emacs-lisp 
   (use-package forge
     :after magit)
