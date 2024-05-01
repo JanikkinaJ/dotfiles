@@ -10,6 +10,8 @@
       - [[#waybar][waybar]]
   - [[#shell][Shell]]
     - [[#bashrc][Bashrc]]
+    - [[#gitconfig][gitconfig]]
+      - [[#leibniz-gitconfig][leibniz gitconfig]]
   - [[#window-manager-supplicant][Window manager supplicant]]
     - [[#polybar][Polybar]]
       - [[#polybar-starter-script][Polybar starter script]]
@@ -301,7 +303,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
       # Autostart applications
       exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-      exec_always --no-startup-id picom -b 
+      exec_always --no-startup-id picom -b --backend glx 
       #exec --no-startup-id manjaro-hello
       exec --no-startup-id nm-applet
       exec --no-startup-id xfce4-power-manager
@@ -1110,6 +1112,25 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   }
 #+end_src
 
+*** gitconfig
+#+begin_src conf :tangle ~/.gitconfig
+  [user]
+  email = 27766253+JanikkinaJ@users.noreply.github.com
+  name = kineye
+
+  [includeIf "gitdir:~/projects/leibniz/"]
+  path = .gitconfig-company
+#+end_src
+
+**** leibniz gitconfig
+#+begin_src conf :tangle ~/.gitconfig-leibniz
+  [user]
+  name = jddIT2023
+  email = 167287091+jddIT2023@users.noreply.github.com 
+
+  [core]
+  sshCommand = ssh -i ~/.ssh/leibniz
+#+end_src
 ** Window manager supplicant 
 *** Polybar
 **** Polybar starter script
