@@ -1013,7 +1013,13 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   	ssh-add "$1" 
       fi   
   }
-  eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa leibniz)
+  hostname=$(uname -n)
+    if [ "$hostname" = "mac" ]; then
+        eval $(keychain --eval --quiet Github id_rsa)
+    else
+        eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa leibniz)
+    fi
+
   #safe-ssh-add ~/.ssh/Github > /dev/null 
   #safe-ssh-add ~/.ssh/gitlab_nepatec > /dev/null 
   #safe-ssh-add ~/.ssh/id_rsa > /dev/null 
@@ -1095,6 +1101,13 @@ The plan is for this file to tangle multiple src blocks into the config files ne
    export INFOPATH
    MANPATH=/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH
    export MANPATH
+   
+  hostname=$(uname -n)
+    if [ "$hostname" = "mac" ]; then
+        setxkbmap -model macbook79 -layout de
+    else
+        setxkbmap eu
+    fi
    
   # enables vterm to look better in emacs
   vterm_printf() {
