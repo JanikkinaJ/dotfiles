@@ -256,39 +256,39 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
 
 *** org babel
 #+begin_src emacs-lisp
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+  ;;(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
   ;; lualatex preview
   ;;(setq org-latex-pdf-process
   ;;  '("lualatex -shell-escape -interaction nonstopmode %f"
   ;;    "lualatex -shell-escape -interaction nonstopmode %f"))
   ;; this ensures that the  org preview math snippets are displayed
-  (setq org-preview-latex-process-alist
-         '((dvipng :programs
-  	 ("latex" "dvipng")
-  	 :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-  	 (1.0 . 1.0)
-  	 :latex-compiler
-  	 ("dvilualatex -interaction nonstopmode -output-directory %o %F")
-  	 :image-converter
-  	 ("dvipng -D %D -T tight -o %O %F")
-  	 :transparent-image-converter
-  	 ("dvipng -D %D -T tight -bg Transparent -o %O %F"))
-   (dvisvgm :programs
-  	  ("latex" "dvisvgm")
-  	  :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-  	  (1.7 . 1.5)
-  	  :latex-compiler
-  	  ("latex -interaction nonstopmode -output-directory %o %f")
-  	  :image-converter
-  	  ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
-   (imagemagick :programs
-  	      ("latex" "convert")
-  	      :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-  	      (1.0 . 1.0)
-  	      :latex-compiler
-  	      ("pdflatex -interaction nonstopmode -output-directory %o %f")
-  	      :image-converter
-  	      ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+  ;; (setq org-preview-latex-process-alist
+  ;;        '((dvipng :programs
+  ;; 	 ("latex" "dvipng")
+  ;; 	 :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
+  ;; 	 (1.0 . 1.0)
+  ;; 	 :latex-compiler
+  ;; 	 ("dvilualatex -interaction nonstopmode -output-directory %o %F")
+  ;; 	 :image-converter
+  ;; 	 ("dvipng -D %D -T tight -o %O %F")
+  ;; 	 :transparent-image-converter
+  ;; 	 ("dvipng -D %D -T tight -bg Transparent -o %O %F"))
+  ;;  (dvisvgm :programs
+  ;; 	  ("latex" "dvisvgm")
+  ;; 	  :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+  ;; 	  (1.7 . 1.5)
+  ;; 	  :latex-compiler
+  ;; 	  ("latex -interaction nonstopmode -output-directory %o %f")
+  ;; 	  :image-converter
+  ;; 	  ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
+  ;;  (imagemagick :programs
+  ;; 	      ("latex" "convert")
+  ;; 	      :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+  ;; 	      (1.0 . 1.0)
+  ;; 	      :latex-compiler
+  ;; 	      ("pdflatex -interaction nonstopmode -output-directory %o %f")
+  ;; 	      :image-converter
+  ;; 	      ("convert -density %D -trim -antialias %f -quality 100 %O"))))
   ;; selects the way to create png for math snippets
   (setq org-latex-create-formula-image-program 'dvipng)
 
@@ -364,6 +364,7 @@ This needs several dependencies
 #+end_src
 ***** Install by hand
 [[https://github.com/mermaid-js/mermaid-cli][mermaid-cli]]
+There is an aur package for arch called ~mermaid-cli~
 #+begin_src bash :tangle no 
 npm install -g @mermaid-js/mermaid-cli
 #+end_src
@@ -573,10 +574,16 @@ this improves the look of org agenda
 *** org capture
 #+begin_src emacs-lisp
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
+        '(("l" "Templates for leibniz")
+  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
+           "* ~Entered on %U~\n %?")
+  	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
+           "* ~Entered on %U~\n %?")
+  	("to" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ))
 #+end_src
 
 ** Code editor changes
@@ -770,7 +777,7 @@ This took a while to get working, currently I write in org and supplement with a
 I then use my custom ~make-pdf-pls~ function to make a pdf out of it
 #+begin_src emacs-lisp
   (use-package latex-preview-pane)
-  (setq pdf-latex-command "lualatex")
+  ;;(setq pdf-latex-command "lualatex")
   (use-package auctex) ;; https://www.gnu.org/software/auctex/manual/auctex.html#Inserting-macros
   ;; use C-c C-c bibtex to load biblatex
   ;; use M-p to update/load/generate preview of pdf
@@ -790,7 +797,7 @@ Don't ask if I want to reload the pdf if there is a new one, I do.
 
 #+begin_src emacs-lisp
   ;;(setq org-latex-to-pdf-process '("texi2dvi --pdf --clean --verbose --batch %f"))
-  (setq org-latex-compiler "luatex") 
+  ;;(setq org-latex-compiler "luatex") 
   ;; stackoverflow link to how this works, but basically allows me to create latex from org mode
   ;; https://tex.stackexchange.com/questions/54205/org-mode-export-to-latex-temptation-or-nuisance
   (with-eval-after-load 'ox-latex
@@ -825,7 +832,22 @@ To use docview ensure that latexlive is installed and if it still doesn't work i
   (use-package doc-view
     :straight (:type built-in)
     :config
-    (setq doc-view-resolution 300))
+    (setq doc-view-resolution 100))
+
+  (add-hook 'doc-view-mode-hook 'inhibit-unused-modes-doc)
+
+  (defun inhibit-unused-modes-doc ()
+    "Counter-act `global-modes'."
+    (add-hook 'after-change-major-mode-hook
+              (lambda () (display-line-numbers-mode 0)
+  	      (visual-line-mode 0)
+  	      (auto-save-mode 0)
+  	      (blink-cursor-mode 0)
+  	      (corfu-mode 0)
+  	      (font-lock-mode 0)
+  	      (evil-collection-unimpaired-mode 0)
+  	      (evil-local-mode 0))
+              :append :local))
 
   (defun make-pdf-pls ()
     (interactive)
@@ -1222,6 +1244,7 @@ https://github.com/seagle0128/doom-modeline
   "c d" 'toggle-dark-theme
   "c n" 'next-theme
   "c p" 'previous-theme
+  "c s" 'scratch-buffer
 #+end_src
 
 ***** vterm keybindings
@@ -1288,7 +1311,7 @@ https://github.com/seagle0128/doom-modeline
   "m h" 'org-insert-heading
   "m v t" 'org-tags-view
   "m s" 'org-set-tags-command
-  "m c" 'org-toggle-checkbox
+  "m c" 'org-capture
 #+end_src
 
 ***** Popper
@@ -1382,4 +1405,5 @@ Shows me keybindings
   (which-key-add-key-based-replacements
     "SPC s" "Spellchecking")
 #+end_src
+
 
