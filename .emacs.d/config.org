@@ -1287,7 +1287,7 @@ https://github.com/seagle0128/doom-modeline
   "m h" 'org-insert-heading
   "m v t" 'org-tags-view
   "m s" 'org-set-tags-command
-  "m c" 'org-toggle-checkbox
+  "m c" 'org-capture
 #+end_src
 
 ***** Popper
