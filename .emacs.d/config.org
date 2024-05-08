@@ -573,10 +573,14 @@ this improves the look of org agenda
 *** org capture
 #+begin_src emacs-lisp
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
+        '(("l" "Templates for leibniz")
+  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
+           "* %?\nEntered on %U\n  %i\n")
+  	("to" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ))
 #+end_src
 
 ** Code editor changes
