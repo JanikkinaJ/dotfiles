@@ -621,38 +621,40 @@ Currently deactivated treesit auto add as many packages are not built to work in
 [[https://emacs-lsp.github.io/lsp-mode/page/installation/][lsp-mode installation]]
 # arch link https://wiki.archlinux.org/title/Language_Server_Protocol
 #+begin_src emacs-lisp
-    (use-package lsp-mode
-    :hook ((c-mode          ; clangd
-    	  c++-mode        ; clangd
-    	  ;;c-or-c++-mode   ; clangd
-    	  java-mode       ; eclipse-jdtls
-    	  js-mode         ; ts-ls (tsserver wrapper)
-    	  js-jsx-mode     ; ts-ls (tsserver wrapper)
-    	  typescript-mode ; ts-ls (tsserver wrapper)
-    	  python-mode     ; pyright
-    	  web-mode        ; ts-ls/HTML/CSS
-    	  haskell-mode    ; haskell-language-server
-    	  rust-mode
-    	  ) . lsp-deferred)
-    :commands lsp
-    :config
-    (setq lsp-auto-guess-root t)
-    (setq lsp-log-io nil)
-    (setq lsp-restart 'auto-restart)
-    (setq lsp-enable-symbol-highlighting nil)
-    (setq lsp-enable-on-type-formatting nil)
-    (setq lsp-signature-auto-activate nil)
-    (setq lsp-signature-render-documentation nil)
-    (setq lsp-eldoc-hook nil)
-    (setq lsp-modeline-code-actions-enable nil)
-    (setq lsp-modeline-diagnostics-enable nil)
-    (setq lsp-headerline-breadcrumb-enable nil)
-    (setq lsp-semantic-tokens-enable nil)
-    (setq lsp-enable-folding nil)
-    (setq lsp-enable-imenu nil)
-    (setq lsp-enable-snippet nil)
-    (setq read-process-output-max (* 1024 1024)) ;; 1MB
-    (setq lsp-idle-delay 0.5))
+  ;; install this for ts-ls manually
+  ;; /usr/bin/npm -g --prefix /home/kineye/.emacs.d/.cache/lsp/npm/typescript-language-server install typescript 
+  (use-package lsp-mode
+  :hook ((c-mode          ; clangd
+  	  c++-mode        ; clangd
+  	  ;;c-or-c++-mode   ; clangd
+  	  java-mode       ; eclipse-jdtls
+  	  js-mode         ; ts-ls (tsserver wrapper)
+  	  js-jsx-mode     ; ts-ls (tsserver wrapper)
+  	  typescript-mode ; ts-ls (tsserver wrapper)
+  	  python-mode     ; pyright
+  	  web-mode        ; ts-ls/HTML/CSS
+  	  haskell-mode    ; haskell-language-server
+  	  rust-mode
+  	  ) . lsp-deferred)
+  :commands lsp
+  :config
+  (setq lsp-auto-guess-root t)
+  (setq lsp-log-io nil)
+  (setq lsp-restart 'auto-restart)
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-eldoc-hook nil)
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-semantic-tokens-enable nil)
+  (setq lsp-enable-folding nil)
+  (setq lsp-enable-imenu nil)
+  (setq lsp-enable-snippet nil)
+  (setq read-process-output-max (* 1024 1024)) ;; 1MB
+  (setq lsp-idle-delay 0.5))
 #+end_src
 
 ****** lsp-ui
@@ -883,6 +885,10 @@ run ~irony-install-server~ to use on first installation
     (setq c-basic-offset 4)
     (c-set-offset 'substatement-open 0))
   (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+#+end_src
+**** javascript
+#+begin_src emacs-lisp
+  (setq js-indent-level 2)
 #+end_src
 **** nix (as in nixos)
 #+begin_src emacs-lisp
