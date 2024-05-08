@@ -256,7 +256,7 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
 
 *** org babel
 #+begin_src emacs-lisp
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+  ;;(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
   ;; lualatex preview
   ;;(setq org-latex-pdf-process
   ;;  '("lualatex -shell-escape -interaction nonstopmode %f"
@@ -576,7 +576,9 @@ this improves the look of org agenda
   (setq org-capture-templates
         '(("l" "Templates for leibniz")
   	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
-           "* %?\nEntered on %U\n  %i\n")
+           "* ~Entered on %U~\n %?")
+  	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
+           "* ~Entered on %U~\n %?")
   	("to" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
@@ -828,7 +830,22 @@ To use docview ensure that latexlive is installed and if it still doesn't work i
   (use-package doc-view
     :straight (:type built-in)
     :config
-    (setq doc-view-resolution 300))
+    (setq doc-view-resolution 100))
+
+  (add-hook 'doc-view-mode-hook 'inhibit-unused-modes-doc)
+
+  (defun inhibit-unused-modes-doc ()
+    "Counter-act `global-modes'."
+    (add-hook 'after-change-major-mode-hook
+              (lambda () (display-line-numbers-mode 0)
+  	      (visual-line-mode 0)
+  	      (auto-save-mode 0)
+  	      (blink-cursor-mode 0)
+  	      (corfu-mode 0)
+  	      (font-lock-mode 0)
+  	      (evil-collection-unimpaired-mode 0)
+  	      (evil-local-mode 0))
+              :append :local))
 
   (defun make-pdf-pls ()
     (interactive)
@@ -1382,4 +1399,5 @@ Shows me keybindings
   (which-key-add-key-based-replacements
     "SPC s" "Spellchecking")
 #+end_src
+
 
