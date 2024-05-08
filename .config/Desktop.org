@@ -303,7 +303,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
       # Autostart applications
       exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-      exec_always --no-startup-id picom -b --backend glx 
+      #exec_always --no-startup-id picom -b --backend glx 
       #exec --no-startup-id manjaro-hello
       exec --no-startup-id nm-applet
       exec --no-startup-id xfce4-power-manager
@@ -463,9 +463,9 @@ The plan is for this file to tangle multiple src blocks into the config files ne
     bindsym Shift+Print exec --no-startup-id maim --format=png --select "/home/kineye/Pictures/$(date)"
 
     ## Clipboard Screenshots
-    bindsym Ctrl+Print exec --no-startup-id maim | xclip -selection clipboard -t image/png
-    bindsym Ctrl+$mod+Print exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
-    bindsym Ctrl+Shift+Print exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
+    bindsym Ctrl+p exec --no-startup-id maim | xclip -selection clipboard -t image/png
+    bindsym Ctrl+$mod+p exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
+    bindsym Ctrl+Shift+p exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
     exec "setxkbmap eu"
 #+end_src
 
@@ -1228,7 +1228,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   ; enable-ipc = true
 
   [bar/main]
-  font-0 = "Hack:size=15"
+  font-0 = "Hack:size=12"
   type = internal/i3
   ; works together with bash script
   monitor = ${env:MONITOR:}
@@ -1473,7 +1473,7 @@ font_family      Hack
 #:     italic_font      Operator Mono Book Italic
 #:     bold_italic_font Operator Mono Medium Italic
 
-font_size 17.0
+font_size 12.0
 
 #: Font size (in pts)
 
