@@ -364,6 +364,7 @@ This needs several dependencies
 #+end_src
 ***** Install by hand
 [[https://github.com/mermaid-js/mermaid-cli][mermaid-cli]]
+There is an aur package for arch called ~mermaid-cli~
 #+begin_src bash :tangle no 
 npm install -g @mermaid-js/mermaid-cli
 #+end_src
