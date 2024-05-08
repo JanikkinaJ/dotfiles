@@ -1221,6 +1221,7 @@ https://github.com/seagle0128/doom-modeline
   "c d" 'toggle-dark-theme
   "c n" 'next-theme
   "c p" 'previous-theme
+  "c s" 'scratch-buffer
 #+end_src
 
 ***** vterm keybindings
