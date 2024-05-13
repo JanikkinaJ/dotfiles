@@ -30,8 +30,9 @@ To edit the current source block in new buffer use ~C-c '~
   ;; -*- lexical-binding: t; -*-
   ;; Don't show the splash screen
   (setq inhibit-startup-message t)
+  (setq initial-major-mode 'org-mode)
   (setq initial-scratch-message "\
-  ;; Don't Panic
+  * Don't Panic
    
   ")
   ;; change the look
