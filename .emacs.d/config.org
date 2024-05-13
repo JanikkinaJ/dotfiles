@@ -836,7 +836,7 @@ To use docview ensure that latexlive is installed and if it still doesn't work i
   (use-package doc-view
     :straight (:type built-in)
     :config
-    (setq doc-view-resolution 100))
+    (setq doc-view-resolution 100)) ;;  change and then run to view in higher res (doc-view-clear-cache) 
 
   (add-hook 'doc-view-mode-hook 'inhibit-unused-modes-doc)
 
