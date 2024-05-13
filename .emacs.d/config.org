@@ -583,6 +583,8 @@ this improves the look of org agenda
            "* ~Entered on %U~\n %?")
   	("lb" "Betriebs Systeme" entry (file+datetree "~/Sync/org/roam/20240510131759-leibnizbetriebsysteme.org")
              "* ~Entered on %U~\n %?")
+  	("lc" "cpp" entry (file+datetree "~/Sync/org/roam/20240513140951-leibnizcpp.org")
+               "* ~Entered on %U~\n %?")
   	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
