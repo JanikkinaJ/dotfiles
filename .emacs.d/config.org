@@ -575,21 +575,23 @@ this improves the look of org agenda
 
 *** org capture
 #+begin_src emacs-lisp
-  (setq org-capture-templates
-        '(("l" "Templates for leibniz")
-  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
-           "* ~Entered on %U~\n %?")
-  	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
-           "* ~Entered on %U~\n %?")
-  	("lb" "Betriebs Systeme" entry (file+datetree "~/Sync/org/roam/20240510131759-leibnizbetriebsysteme.org")
+    (setq org-capture-templates
+          '(("l" "Templates for leibniz")
+    	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
              "* ~Entered on %U~\n %?")
-  	("lc" "cpp" entry (file+datetree "~/Sync/org/roam/20240513140951-leibnizcpp.org")
+    	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
+             "* ~Entered on %U~\n %?")
+    	("lb" "Betriebs Systeme" entry (file+datetree "~/Sync/org/roam/20240510131759-leibnizbetriebsysteme.org")
                "* ~Entered on %U~\n %?")
-  	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
-         "* TODO %?\n  %i\n  %a")
-        ("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")
-        ))
+    	("lc" "cpp" entry (file+datetree "~/Sync/org/roam/20240513140951-leibnizcpp.org")
+                 "* ~Entered on %U~\n %?")
+  	("la" "analysis" entry (file+datetree "~/Sync/org/roam/20240514091218-leibnizanalysis.org")
+                 "* ~Entered on %U~\n %?")
+    	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("j" "Journal" entry (file+datetree "~/org/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")
+          ))
 #+end_src
 
 ** Code editor changes
@@ -836,7 +838,7 @@ To use docview ensure that latexlive is installed and if it still doesn't work i
   (use-package doc-view
     :straight (:type built-in)
     :config
-    (setq doc-view-resolution 100)) ;;  change and then run to view in higher res (doc-view-clear-cache) 
+    (setq doc-view-resolution 300)) ;;  change and then run to view in higher res (doc-view-clear-cache) 
 
   (add-hook 'doc-view-mode-hook 'inhibit-unused-modes-doc)
 
