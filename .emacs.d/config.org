@@ -99,13 +99,14 @@ as emacs is started from i3 not from shell this adds necessary paths
   apps are not started from a shell."
     (interactive)
     (let ((path-from-shell (replace-regexp-in-string
-                "[ \t\n]*$" "" (shell-command-to-string
-                        "$SHELL --login -c 'echo $PATH'"
-                              ))))
+  			  "[ \t\n]*$" "" (shell-command-to-string
+  					  "$SHELL --login -c 'echo $PATH'"
+  						    ))))
       (setenv "PATH" path-from-shell)
       (setq exec-path (split-string path-from-shell path-separator))))
 
   (set-exec-path-from-shell-PATH)
+  (add-to-list 'exec-path "/usr/local/texlive/2024/bin/x86_64-linux")
 #+end_src
 
 *** Package management
@@ -257,6 +258,32 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
     (interactive)
     (org-agenda nil "M")
     )
+
+  (use-package rainbow-delimiters
+    ;; makes delimeters (such as brackets) different colours based on depth
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package org-bullets
+    ;; switches org headings bullet points out
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+  (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+  ;; change lists "-" to dot
+  (font-lock-add-keywords 'org-mode
+                            '(("^ *\\([-]\\) "
+                               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
  #+end_src
 
 *** org babel
@@ -593,11 +620,20 @@ this improves the look of org agenda
            "* ~Entered on %U~\n %?")
   	("ls" "software engineering" entry (file+datetree "~/Sync/org/roam/20240514145813-leibnizsoftwareengineering.org")
            "* ~Entered on %U~\n %?")
+          ("lk" "Komplexität" entry (file+datetree "~/Sync/org/roam/20240515090834-leibnizkomplexitat.org")
+           "* ~Entered on %U~\n %?")
   	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")
         ))
+#+end_src
+
+*** org treeslide
+#+begin_src emacs-lisp
+  (use-package org-tree-slide
+    :custom
+    (org-image-actual-width-nil))
 #+end_src
 
 ** Code editor changes
@@ -1107,8 +1143,8 @@ Also allows checking for weasel words and passive voice irregulars
   (use-package shackle
     :custom
     (shackle-rules '(
-  		   (".*vterm.*" :regexp t :popup t :select t :align bottom :size 0.4)
-                     (".*magit.*" :regexp t :popup t :select t :align right :size 0.5)))
+  		   ("\*vterm\*" :regexp t :popup t :select t :align bottom :size 0.4)
+                     (".*\magit:.*" :regexp t :popup t :select t :align right :size 0.5)))
     :config
     (shackle-mode t))
 #+end_src
@@ -1124,7 +1160,8 @@ Also allows checking for weasel words and passive voice irregulars
             help-mode
             compilation-mode))
     (popper-mode +1)
-    (popper-echo-mode +1))                ; For echo area hints
+    ;;(popper-echo-mode +1)
+    )                ; For echo area hints
 #+end_src
 
 ** Look and feel
