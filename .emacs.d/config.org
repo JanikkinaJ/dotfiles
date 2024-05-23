@@ -57,6 +57,7 @@ To edit the current source block in new buffer use ~C-c '~
     recentf-max-saved-items 10000
     recentf-max-menu-items 5000
     ))
+  (recentf-mode 1)
   ;;(run-at-time nil 600 'recentf-save-list)
   (add-hook 'find-file-hook 'recentf-save-list)
   (add-hook 'org-roam-find-file-hook 'recentf-save-list)
@@ -133,9 +134,9 @@ mini buffer completion
   ;; (setq vertico-cycle t)
   )
   ;; save history
-  (use-package savehist
-  :init
-  (savehist-mode))
+  ;;(use-package savehist
+  ;;:init
+  ;;(savehist-mode))
   
 
   ;; useful configurations
@@ -337,6 +338,7 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
      (rust . t)
      (C . t)
      (mermaid . t)
+     (haskell . t)
      ))
 
   ;; allows us to just put #+auto_tangle: t in the heading to tangle
@@ -961,6 +963,15 @@ run ~irony-install-server~ to use on first installation
 **** javascript
 #+begin_src emacs-lisp
   (setq js-indent-level 2)
+#+end_src
+**** Haskell
+Install ~haskell-language-server-static~ from aur
+#+begin_src emacs-lisp
+  (use-package haskell-mode) 
+  (setq haskell-program-name "ghci")
+  (use-package lsp-haskell)
+  (add-hook 'haskell-mode-hook #'lsp)
+  (add-hook 'haskell-literate-mode-hook #'lsp)
 #+end_src
 **** nix (as in nixos)
 #+begin_src emacs-lisp
