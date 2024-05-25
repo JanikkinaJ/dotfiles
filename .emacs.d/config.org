@@ -56,12 +56,14 @@ To edit the current source block in new buffer use ~C-c '~
     recentf-save-file "~/.emacs.d/recentf"
     recentf-max-saved-items 10000
     recentf-max-menu-items 5000
-    ))
+    )
   (recentf-mode 1)
+  (run-at-time (current-time) 300 'recentf-save-list)
+  :hook (find-file-hook . recentf-save-list)
+  :hook (org-roam-find-file-hook . recentf-save-list)
+  :hook (org-roam-dailies-goto-today . recentf-save-list)
+  )
   ;;(run-at-time nil 600 'recentf-save-list)
-  (add-hook 'find-file-hook 'recentf-save-list)
-  (add-hook 'org-roam-find-file-hook 'recentf-save-list)
-  (add-hook 'org-roam-dailies-goto-today 'recentf-save-list)
 
   ;;(setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
@@ -289,40 +291,7 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
 
 *** org babel
 #+begin_src emacs-lisp
-  ;;(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
-  ;; lualatex preview
-  ;;(setq org-latex-pdf-process
-  ;;  '("lualatex -shell-escape -interaction nonstopmode %f"
-  ;;    "lualatex -shell-escape -interaction nonstopmode %f"))
-  ;; this ensures that the  org preview math snippets are displayed
-  ;; (setq org-preview-latex-process-alist
-  ;;        '((dvipng :programs
-  ;; 	 ("latex" "dvipng")
-  ;; 	 :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-  ;; 	 (1.0 . 1.0)
-  ;; 	 :latex-compiler
-  ;; 	 ("dvilualatex -interaction nonstopmode -output-directory %o %F")
-  ;; 	 :image-converter
-  ;; 	 ("dvipng -D %D -T tight -o %O %F")
-  ;; 	 :transparent-image-converter
-  ;; 	 ("dvipng -D %D -T tight -bg Transparent -o %O %F"))
-  ;;  (dvisvgm :programs
-  ;; 	  ("latex" "dvisvgm")
-  ;; 	  :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-  ;; 	  (1.7 . 1.5)
-  ;; 	  :latex-compiler
-  ;; 	  ("latex -interaction nonstopmode -output-directory %o %f")
-  ;; 	  :image-converter
-  ;; 	  ("dvisvgm %f --no-fonts --exact-bbox --scale=%S --output=%O"))
-  ;;  (imagemagick :programs
-  ;; 	      ("latex" "convert")
-  ;; 	      :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-  ;; 	      (1.0 . 1.0)
-  ;; 	      :latex-compiler
-  ;; 	      ("pdflatex -interaction nonstopmode -output-directory %o %f")
-  ;; 	      :image-converter
-  ;; 	      ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-  ;; selects the way to create png for math snippets
+  (require 'ox)
   (setq org-latex-create-formula-image-program 'dvipng)
 
   (use-package ob-rust)
@@ -338,6 +307,7 @@ Even though org mode is preinstalled this ensures there is no org mode mismatch
      (rust . t)
      (C . t)
      (mermaid . t)
+     (gnuplot . t)
      (haskell . t)
      ))
 
@@ -631,7 +601,31 @@ this improves the look of org agenda
         ))
 #+end_src
 
-*** org treeslide
+*** gnuplot
+#+begin_src emacs-lisp
+  (use-package gnuplot)
+#+end_src
+*** ox-hugo
+First install hugo with =sudo pacman -Syu hugo=
+#+begin_src emacs-lisp
+  (use-package ox-hugo
+    :ensure t
+    :after ox
+    )
+  (with-eval-after-load 'ox-hugo
+    (add-to-list 'org-hugo-special-block-type-properties '("mermaid" . (:raw t))))
+#+end_src
+Auto compile with this exerpt at bottom of page:
+#+begin_src org :tangle no
+  ​* Footnotes
+  ​* COMMENT Local Variables                          :ARCHIVE:
+  # Local Variables:
+  # eval: (org-hugo-auto-export-mode -1)
+  # End:
+#+end_src
+
+***  presenting org mode
+**** org treeslide
 #+begin_src emacs-lisp
   (use-package org-tree-slide
     :custom
