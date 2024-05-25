@@ -1396,24 +1396,16 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
   # Set format options
   FORMAT_UP='%{F#00ff08}'
+  FORMAT_CONNECTING='%{F#ffff00}'
   FORMAT_DOWN='%{F#FF0000}'
 
   # Count the number of tun adapters, e.g. tun0, tun1, etc
-  MULLCONNECTIONS=$(if ip -j link show wg-mullvad &>/dev/null; then
-      ip -j link show wg-mullvad | jq -r 'length'
-  else
-      echo 0
-  fi)
+  MULLSTATUS=$( mullvad status | awk '{print $1}' | head -n 1;)
 
-  if [ "$MULLCONNECTIONS" != "0" ]; then
-      # This filters the JSON output from ip to show "name ip.ip.ip.ip" for each adapter
-      MESSAGE_UP=$(\
-          ip -4 -j addr show \
-          | jq '[ .[] | select( .ifname | startswith("wg-mullvad")) | [ .ifname, .addr_info[0].local ]  ]'\
-          | jq '[ .[] | join(" ") ]' \
-          | jq -r 'join(", ")'\
-      )
-      echo "$FORMAT_UP$MESSAGE_UP"
+  if [ $MULLSTATUS == "Connected" ]; then
+      echo "$FORMAT_UP VPN $MULLSTATUS"
+  elif [ $MULLSTATUS == "Connecting" ]; then
+      echo "$FORMAT_CONNECTING VPN $MULLSTATUS"
   else
       MESSAGE_DOWN='VPN down'
       echo "$FORMAT_DOWN$MESSAGE_DOWN"
