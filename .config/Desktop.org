@@ -299,7 +299,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
       }
 
       # Lock screen
-      bindsym $mod+9 exec --no-startup-id i3lock -i /usr/share/background/sky_mountain.png
+      bindsym $mod+9 exec --no-startup-id i3lock -i ~/Sync/background/Windowsded.png
 
       # Autostart applications
       exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -1123,6 +1123,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
          printf "\e]%s\e\\" "$1"
      fi
   }
+  setxkbmap -model macbook79 -layout de
 #+end_src
 
 *** gitconfig
