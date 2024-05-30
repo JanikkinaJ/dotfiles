@@ -830,6 +830,8 @@ I then use my custom ~make-pdf-pls~ function to make a pdf out of it
   (use-package auctex) ;; https://www.gnu.org/software/auctex/manual/auctex.html#Inserting-macros
   ;; use C-c C-c bibtex to load biblatex
   ;; use M-p to update/load/generate preview of pdf
+  ;; to increase the speed of pdf view
+  (use-package pdf-tools)
 #+end_src
 
 Don't ask if I want to reload the pdf if there is a new one, I do.
