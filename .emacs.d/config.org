@@ -393,6 +393,7 @@ Allows us to download html into an org format
 #+end_src
 
 **** org-download
+Need to install xclip
 #+begin_src emacs-lisp
   ;; paste image to org file
   (use-package org-download)
@@ -591,6 +592,8 @@ this improves the look of org agenda
   	("la" "analysis" entry (file+datetree "~/Sync/org/roam/20240514091218-leibnizanalysis.org")
            "*  %?")
   	("ls" "software engineering" entry (file+datetree "~/Sync/org/roam/20240514145813-leibnizsoftwareengineering.org")
+           "*  %?")
+  	("lp" "project management" entry (file+datetree "~/Sync/org/roam/20240528131142-leibnizprojectmanagement.org")
            "*  %?")
           ("lk" "Komplexität" entry (file+datetree "~/Sync/org/roam/20240515090834-leibnizkomplexitat.org")
            "*  %?")
