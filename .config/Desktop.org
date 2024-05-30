@@ -498,7 +498,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   ### Output configuration
   #
   # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-  output * bg ~/Sync/background/lightning.jpg fill
+  feh --bg-fill ~/Sync/background/lightning.jpg
   #
   # Example configuration:
   #
@@ -701,7 +701,6 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   default_border pixel 2 # remove borders
   exec waybar
 #+end_src
-
 
 **** waybar
 #+begin_src conf :tangle ~/.config/waybar/config
@@ -1019,7 +1018,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
     if [ "$hostname" = "mac" ]; then
         eval $(keychain --eval --quiet Github id_rsa)
     else
-        eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa leibniz)
+        eval $(keychain --eval --quiet Github gitlab_nepatec id_rsa)
     fi
 
   #safe-ssh-add ~/.ssh/Github > /dev/null 
@@ -1123,7 +1122,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
          printf "\e]%s\e\\" "$1"
      fi
   }
-  setxkbmap -model macbook79 -layout de
+  setxkbmap -layout eu
 #+end_src
 
 *** gitconfig
@@ -1229,7 +1228,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   ; enable-ipc = true
 
   [bar/main]
-  font-0 = "Hack:size=12"
+  font-0 = "Hack:size=20"
   type = internal/i3
   ; works together with bash script
   monitor = ${env:MONITOR:}
@@ -1260,7 +1259,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   separator-foreground = ${colors.disabled}
 
   modules-left = xworkspaces
-  modules-right = filesystem pulseaudio memory cpu wlan eth vpn-status date
+  modules-right = filesystem pulseaudio memory cpu wlan eth battery vpn-status date
 
   cursor-click = pointer
   enable-ipc = true
@@ -1311,6 +1310,49 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
   label-unmounted = %mountpoint% not mounted
   label-unmounted-foreground = ${colors.disabled}
+
+  [module/battery]
+  type = internal/battery
+
+  ; This is useful in case the battery never reports 100% charge
+  ; Default: 100
+  full-at = 99
+
+  ; format-low once this charge percentage is reached
+  ; Default: 10
+  ; New in version 3.6.0
+  low-at = 5
+
+  ; Use the following command to list batteries and adapters:
+  ; $ ls -1 /sys/class/power_supply/
+  battery = BAT1
+  adapter = ADP1
+
+  ; Available tokens:
+  ;   %percentage% (default) - is set to 100 if full-at is reached
+  ;   %percentage_raw%
+  ;   %time%
+  ;   %consumption% (shows current charge rate in watts)
+  label-charging = Charging %percentage%%
+
+  ; Available tokens:
+  ;   %percentage% (default) - is set to 100 if full-at is reached
+  ;   %percentage_raw%
+  ;   %time%
+  ;   %consumption% (shows current discharge rate in watts)
+  label-discharging = Discharging %percentage%%
+
+  ; If an inotify event haven't been reported in this many
+  ; seconds, manually poll for new values.
+  ;
+  ; Needed as a fallback for systems that don't report events
+  ; on sysfs/procfs.
+  ;
+  ; Disable polling by setting the interval to 0.
+  ;
+  ; Default: 5
+  poll-interval = 5
+
 
   [module/pulseaudio]
   type = internal/pulseaudio
@@ -1466,7 +1508,7 @@ font_family      Hack
 #:     italic_font      Operator Mono Book Italic
 #:     bold_italic_font Operator Mono Medium Italic
 
-font_size 12.0
+font_size 17.0
 
 #: Font size (in pts)
 
