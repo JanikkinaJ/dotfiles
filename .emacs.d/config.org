@@ -238,6 +238,7 @@ provides better search and navigation commands
   (with-eval-after-load 'evil-maps
     (define-key evil-motion-state-map (kbd "SPC") nil)
     (define-key evil-motion-state-map (kbd "RET") nil))
+  (evil-set-undo-system 'undo-redo)
 #+end_src
 **** evil collection
 #+begin_src emacs-lisp
@@ -364,7 +365,7 @@ This needs several dependencies
 **** Mermaid
 #+begin_src emacs-lisp 
   ;; this needs to happen before org mode (use-package ob-mermaid)
-  (setq ob-mermaid-cli-path "/home/kineye/.local/bin/mmdc")
+  (setq ob-mermaid-cli-path "/usr/bin/mmdc")
 #+end_src
 ***** Install by hand
 [[https://github.com/mermaid-js/mermaid-cli][mermaid-cli]]
@@ -596,6 +597,8 @@ this improves the look of org agenda
   	("lp" "project management" entry (file+datetree "~/Sync/org/roam/20240528131142-leibnizprojectmanagement.org")
            "*  %?")
           ("lk" "Komplexität" entry (file+datetree "~/Sync/org/roam/20240515090834-leibnizkomplexitat.org")
+           "*  %?")
+  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
            "*  %?")
   	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
   	 "* TODO %?\n  %i\n  %a")
@@ -832,6 +835,9 @@ I then use my custom ~make-pdf-pls~ function to make a pdf out of it
   ;; use M-p to update/load/generate preview of pdf
   ;; to increase the speed of pdf view
   (use-package pdf-tools)
+
+  (setq org-format-latex-options '(:foreground default :background default :scale 3.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+  	     ("begin" "$1" "$" "$$" "\\(" "\\[")))
 #+end_src
 
 Don't ask if I want to reload the pdf if there is a new one, I do.
@@ -1188,15 +1194,15 @@ Also allows checking for weasel words and passive voice irregulars
 #+begin_src emacs-lisp
   ;; list of all themes in use
   (setq my_themes '(doom-one doom-one-light sanityinc-tomorrow-eighties doom-oceanic-next doom-molokai doom-laserwave doom-palenight doom-snazzy doom-wilmersdorf doom-outrun-electric doom-solarized-light doom-nord-light doom-tomorrow-day sanityinc-tomorrow-day))
-  (defvar default-dark-theme 3)
-  (defvar default-light-theme 13)
+  (defvar default-dark-theme 4)
+  (defvar default-light-theme 11)
   (defvar current_theme default-dark-theme)
   (load-theme (nth current_theme my_themes) t)
 
   (defun toggle-dark-theme ()
     (interactive)
     (disable-theme (nth current_theme my_themes))
-    (if (= current_theme 3)
+    (if (= current_theme 4)
      (setq current_theme default-light-theme) 
      (setq current_theme default-dark-theme))
     (load-theme (nth current_theme my_themes) t)
