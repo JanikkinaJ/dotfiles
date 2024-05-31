@@ -258,7 +258,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
   # Set shut down, restart and locking features
-  bindsym $mod+0 mode "$mode_system"
+  # bindsym $mod+0 mode "$mode_system"
   set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
   mode "$mode_system" {
       bindsym l exec --no-startup-id i3exit lock, mode "default"
@@ -303,11 +303,10 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
   # Autostart applications
   exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-  #exec_always --no-startup-id picom -b --backend glx 
+  exec_always --no-startup-id picom -b --backend glx 
   #exec --no-startup-id manjaro-hello
   exec_always --no-startup-id nm-applet
   exec --no-startup-id xfce4-power-manager
-  exec --no-startup-id pamac-tray
   exec --no-startup-id clipit
   # exec --no-startup-id blueman-applet
   # exec_always --no-startup-id sbxkb
@@ -468,7 +467,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym Ctrl+p exec --no-startup-id maim | xclip -selection clipboard -t image/png
   bindsym Ctrl+$mod+p exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
   bindsym Ctrl+Shift+p exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
-  exec "setxkbmap eu"
+  exec --no-startup-id "setxkbmap eu"
 #+end_src
 
 *** Sway
@@ -1305,7 +1304,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   type = internal/fs
   interval = 25
 
-  mount-0 = /
+  mount-0 = /home
 
   label-mounted = %{F#F0C674}%mountpoint%%{F-} %free%
 
