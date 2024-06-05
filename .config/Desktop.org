@@ -456,6 +456,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym $mod+o exec --no-startup-id firefox -P "Leibniz"
   bindsym $mod+p exec --no-startup-id firefox -P "Nepatec"
   bindsym $mod+bracketleft exec --no-startup-id firefox -P "default"
+  bindsym $mod+bracketright exec --no-startup-id firefox -P "content"
   bindsym $mod+Ctrl+9 exec i3lock
 
   ## Screenshots
@@ -1111,8 +1112,6 @@ The plan is for this file to tangle multiple src blocks into the config files ne
         setxkbmap eu
     fi
    
-  export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
-    
   # enables vterm to look better in emacs
   vterm_printf() {
      if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
