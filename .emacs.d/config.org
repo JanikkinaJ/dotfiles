@@ -974,7 +974,13 @@ Install ~haskell-language-server-static~ from aur
 #+begin_src emacs-lisp
   (use-package haskell-mode) 
   (setq haskell-program-name "ghci")
-  (use-package lsp-haskell)
+  (use-package lsp-haskell
+    :hook
+    (haskell-mode . lsp)
+    (haskell-literate-mode . lsp))
+    (setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
+    (setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
+    ;;(add-hook 'haskell-literate-mode-hook #'lsp)
   (add-hook 'haskell-mode-hook #'lsp)
   (add-hook 'haskell-literate-mode-hook #'lsp)
 #+end_src
