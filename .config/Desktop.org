@@ -1111,6 +1111,8 @@ The plan is for this file to tangle multiple src blocks into the config files ne
         setxkbmap eu
     fi
    
+  export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
+    
   # enables vterm to look better in emacs
   vterm_printf() {
      if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
@@ -1123,6 +1125,8 @@ The plan is for this file to tangle multiple src blocks into the config files ne
          printf "\e]%s\e\\" "$1"
      fi
   }
+
+
 #+end_src
 
 *** gitconfig
