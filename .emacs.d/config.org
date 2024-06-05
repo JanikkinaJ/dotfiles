@@ -218,6 +218,14 @@ provides better search and navigation commands
 #+begin_src emacs-lisp
   (use-package consult)
 #+end_src
+**** own search function
+#+begin_src emacs-lisp
+  (defun local/org-roam-rg-search ()
+    "Search org-roam directory using consult-ripgrep. With live-preview."
+    (interactive)
+    (let ((consult-ripgrep-command "rg --multiline --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+      (consult-ripgrep org-roam-directory "")))
+#+end_src
 
 *** evil mode
 **** evil vim
@@ -970,7 +978,7 @@ run ~irony-install-server~ to use on first installation
   (setq js-indent-level 2)
 #+end_src
 **** Haskell
-Install ~haskell-language-server-static~ from aur
+Install ghcup from here [[https://ghcup.readthedocs.io/en/latest/][ghcup site]] 
 #+begin_src emacs-lisp
   (use-package haskell-mode) 
   (setq haskell-program-name "ghci")
@@ -983,6 +991,11 @@ Install ~haskell-language-server-static~ from aur
     ;;(add-hook 'haskell-literate-mode-hook #'lsp)
   (add-hook 'haskell-mode-hook #'lsp)
   (add-hook 'haskell-literate-mode-hook #'lsp)
+
+  (let ((my-ghcup-path (expand-file-name "~/.ghcup/bin")))
+    (setenv "PATH" (concat my-ghcup-path ":" (getenv "PATH")))
+    (add-to-list 'exec-path my-ghcup-path))
+
 #+end_src
 **** nix (as in nixos)
 #+begin_src emacs-lisp
@@ -1417,6 +1430,7 @@ https://github.com/seagle0128/doom-modeline
   "x f" 'consult-fd
   "x l" 'consult-line
   "x a" 'embark-act
+  "x s" 'local/org-roam-rg-search
 #+end_src
 
 ***** spelling
