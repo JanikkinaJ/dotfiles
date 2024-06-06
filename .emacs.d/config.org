@@ -609,7 +609,7 @@ this improves the look of org agenda
   	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
            "*  %?")
   	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
-  	 "* TODO %?\n  %i\n  %a")
+  	 "* TODO %?")
   	("j" "Journal" entry (file+datetree "~/Sync/org/journal.org")
   	 "* %?")
         ))
