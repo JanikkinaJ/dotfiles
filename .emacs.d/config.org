@@ -610,8 +610,8 @@ this improves the look of org agenda
            "*  %?")
   	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
   	 "* TODO %?\n  %i\n  %a")
-  	("j" "Journal" entry (file+datetree "~/org/journal.org")
-  	 "* %?\nEntered on %U\n  %i\n  %a")
+  	("j" "Journal" entry (file+datetree "~/Sync/org/journal.org")
+  	 "* %?")
         ))
 #+end_src
 
