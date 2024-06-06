@@ -433,6 +433,10 @@ Then run ~org-transclusion-add~
   (use-package org-transclusion) 
 #+end_src
 
+**** gnuplot
+#+begin_src emacs-lisp
+  (use-package gnuplot)
+#+end_src
 *** org roam
 [[https://github.com/bastibe/org-journal][org journal github]] is not being used, instead org roam dailies
 
@@ -464,7 +468,7 @@ Then run ~org-transclusion-add~
 This allows me to keep track of todos
 **** code
 #+begin_src emacs-lisp
-  (setq org-agenda-files (list "~/Sync/org/roam/daily" "~/Sync/org/roam/todo.org")) 
+  (setq org-agenda-files (list "~/Sync/org/roam/daily" "~/Sync/org/roam" "~/Sync/org/roam/todo.org")) 
 
   ;; predefined tags that I can autocomplete when running org-set-tags-command 
   (push '("nepatec") org-tag-persistent-alist)
@@ -615,10 +619,6 @@ this improves the look of org agenda
         ))
 #+end_src
 
-*** gnuplot
-#+begin_src emacs-lisp
-  (use-package gnuplot)
-#+end_src
 *** ox-hugo
 First install hugo with =sudo pacman -Syu hugo=
 #+begin_src emacs-lisp
