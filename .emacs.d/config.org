@@ -464,7 +464,7 @@ Then run ~org-transclusion-add~
 This allows me to keep track of todos
 **** code
 #+begin_src emacs-lisp
-  (setq org-agenda-files '("~/Sync/org/roam/daily"))
+  (setq org-agenda-files (list "~/Sync/org/roam/daily" "~/Sync/org/roam/todo.org")) 
 
   ;; predefined tags that I can autocomplete when running org-set-tags-command 
   (push '("nepatec") org-tag-persistent-alist)
