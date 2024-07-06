@@ -317,6 +317,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   exec_always --no-startup-id fix_xcursor
   exec_always --no-startup-id feh --bg-fill ~/Sync/background/lightning.jpg
 
+
   # Color palette used for the terminal ( ~/.Xresources file )
   # Colors are gathered based on the documentation:
   # https://i3wm.org/docs/userguide.html#xresources
@@ -469,6 +470,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym Ctrl+$mod+p exec --no-startup-id maim --window $(xdotool getactivewindow) | xclip -selection clipboard -t image/png
   bindsym Ctrl+Shift+p exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
   exec --no-startup-id "setxkbmap eu"
+  exec --no-startup-id "xrdb -merge ~/.Xresources"
 #+end_src
 
 *** Sway
@@ -489,7 +491,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   set $up k
   set $right l
   # Your preferred terminal emulator
-  set $term foot
+  set $term kitty
   # Your preferred application launcher
   # Note: pass the final command to swaymsg so that the resulting window can be opened
   # on the original workspace that the command was run on.
@@ -500,7 +502,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   ### Output configuration
   #
   # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-  feh --bg-fill ~/Sync/background/lightning.jpg
+  output * bg ~/Sync/background/lightning.jpg fill
   #
   # Example configuration:
   #
@@ -697,11 +699,11 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   bindsym $mod+o exec --no-startup-id firefox -P "Leibniz"
   bindsym $mod+p exec --no-startup-id firefox -P "Nepatec"
   bindsym $mod+bracketleft exec --no-startup-id firefox -P "default"
-  bindsym $mod+0 exec swaylock --show-failed-attempts --image ~/Sync/background/space.jpg
+  bindsym $mod+bracketright exec --no-startup-id firefox -P "content"
+  bindsym $mod+Ctrl+0 exec swaylock --show-failed-attempts --image ~/Sync/background/space.jpg
   bindsym Print exec grimshot --notify save area  
 
   default_border pixel 2 # remove borders
-  exec waybar
 #+end_src
 
 **** waybar
@@ -1104,14 +1106,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
    export INFOPATH
    MANPATH=/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH
    export MANPATH
-   
-  hostname=$(uname -n)
-    if [ "$hostname" = "mac" ]; then
-        setxkbmap -model macbook79 -layout de
-    else
-        setxkbmap eu
-    fi
-   
+
   # enables vterm to look better in emacs
   vterm_printf() {
      if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
@@ -1125,7 +1120,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
      fi
   }
 
-  setxkbmap -layout eu
+  # setxkbmap -layout eu
 #+end_src
 
 *** gitconfig
@@ -1353,7 +1348,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   ; Disable polling by setting the interval to 0.
   ;
   ; Default: 5
-  poll-interval = 5
+  poll-interval = 3
 
 
   [module/pulseaudio]
