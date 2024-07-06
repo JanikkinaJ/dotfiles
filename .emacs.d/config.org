@@ -41,14 +41,15 @@ To edit the current source block in new buffer use ~C-c '~
   (menu-bar-mode -1) ; remove menu bar
   (global-display-line-numbers-mode 1)
 
+  ;;send backups to one file
+  (setq backup-directory-alist `(("." . "~/Sync/org/.saves")))
+
   ;;no dialog box
   (setq use-dialog-box nil)
   ;; lifes to short to type yes
   (defalias 'yes-or-no-p 'y-or-n-p)
 
   ;; enable recent files
-
-
   (use-package recentf
   :commands recentf-mode 
   :init
