@@ -696,6 +696,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   exec_always --no-startup-id emacs --daemon
   bindsym $mod+d exec $menu
   bindsym $mod+i exec emacsclient -c -a ""
+  bindsym $mod+u exec obsidian
   bindsym $mod+o exec --no-startup-id firefox -P "Leibniz"
   bindsym $mod+p exec --no-startup-id firefox -P "Nepatec"
   bindsym $mod+bracketleft exec --no-startup-id firefox -P "default"
@@ -708,98 +709,103 @@ The plan is for this file to tangle multiple src blocks into the config files ne
 
 **** waybar
 #+begin_src conf :tangle ~/.config/waybar/config
-  {
-      "modules-left": ["sway/workspaces", "sway/mode"],
-      "modules-center": ["clock", "idle_inhibitor"],
-      /* "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "custom/power"], */
-      "modules-right": ["tray", "custom/scratchpad-indicator", "cpu", "memory", "custom/vpn", "network", "pulseaudio", "battery", "custom/power"],
+    {
+        "modules-left": ["sway/workspaces", "sway/mode"],
+        "modules-center": ["clock", "idle_inhibitor"],
+        /* "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "custom/power"], */
+        "modules-right": ["tray", "custom/scratchpad-indicator", "cpu", "memory", "custom/vpn", "network", "pulseaudio", "battery", "custom/power"],
 
-      "sway/mode": {
-          "format": "<span style=\"italic\">{}</span>"
-      },
-      "network": {
-          "format-wifi": "{essid} ({signalStrength}%) ",
-          "format-ethernet": "{ifname} ",
-          "format-disconnected": "", 
-          "max-length": 50,
-          "on-click": "nm-connection-editor"
-      },
-      "idle_inhibitor": {
-          "format": "{icon}",
-          "format-icons": {
-              "activated": "",
-              "deactivated": ""
-          },
-  		"on-click": "bash /home/dg/.local/bin/toggleRemote"
-      },
-      "tray": {
-          "icon-size": 15,
-          "spacing": 10
-      },
-      "clock": {
-             "tooltip-format": "<big>{:%Y %B %d}</big>\n<tt><small>{calendar}</small></tt>",
-          // "format-alt": "{:%Y-%m-%d}"
-  		"on-click": "gnome-calendar"
-      },
-      "pulseaudio": {
-          "format": "{volume}% {icon} ",
-          "format-bluetooth": "{volume}% {icon} {format_source}",
-          "format-bluetooth-muted": " {icon} {format_source}",
-          "format-muted": "0% {icon} ",
-          "format-source": "{volume}% ",
-          "format-source-muted": "",
-          "format-icons": {
-              "headphone": "",
-              "hands-free": "",
-              "headset": "",
-              "phone": "",
-              "portable": "",
-              "car": "",
-              "default": ["", "", ""]
-          },
-          "on-click": "pavucontrol"	
-      },
-      "battery": {
-  		"states": {
-  			"good": 95,
-  			"warning": 30,
-  			"critical": 15
-  		},
-  		"format": "{icon} {capacity}%",
-  		"format-icons": [
-  			"  ",
-  			"  ",
-  			"  ",
-  			"  ",
-  			"  "
-  		]
-      },
-      "custom/vpn": {
-         "format": "VPN: {} ",
-         "interval": 5,
-         "tooltip": "true",
-         "exec": "mullvad status | cut -d' ' -f1 | head --lines=1 "
-      },
-      "cpu": {
-          "format": "{usage}% "
-      },
-      "memory": {
-          "format": "{}% "
-      },
-  	"custom/power": {
-  		"format": " ",
-  		"on-click": "swaynag -t warning -m 'Power Menu Options' -b 'Logout' 'swaymsg exit' -b 'Restart' 'shutdown -r now' -b 'Shutdown'  'shutdown -h now' --background=#005566 --button-background=#009999 --button-border=#002b33 --border-bottom=#002b33"
+        "sway/mode": {
+            "format": "<span style=\"italic\">{}</span>"
+        },
+        "network": {
+            "format-wifi": "{essid} ({signalStrength}%) ",
+            "format-ethernet": "{ifname} ",
+            "format-disconnected": "", 
+            "max-length": 50,
+            "on-click": "nm-connection-editor"
+        },
+        "idle_inhibitor": {
+            "format": "{icon}",
+            "format-icons": {
+                "activated": "",
+                "deactivated": ""
+            },
+    		"on-click": "bash /home/dg/.local/bin/toggleRemote"
+        },
+        "tray": {
+            "icon-size": 15,
+            "spacing": 10
+        },
+        "clock": {
+               "tooltip-format": "<big>{:%Y %B %d}</big>\n<tt><small>{calendar}</small></tt>",
+            // "format-alt": "{:%Y-%m-%d}"
+    		"on-click": "gnome-calendar"
+        },
+        "pulseaudio": {
+            "format": "{volume}% {icon} ",
+            "format-bluetooth": "{volume}% {icon} {format_source}",
+            "format-bluetooth-muted": " {icon} {format_source}",
+            "format-muted": "0% {icon} ",
+            "format-source": "{volume}% ",
+            "format-source-muted": "",
+            "format-icons": {
+                "headphone": "",
+                "hands-free": "",
+                "headset": "",
+                "phone": "",
+                "portable": "",
+                "car": "",
+                "default": ["", "", ""]
+            },
+            "on-click": "pavucontrol"	
+        },
+        "battery": {
+    		"states": {
+    			"good": 95,
+    			"warning": 30,
+    			"critical": 15
+    		},
+    		"format": "{icon} {capacity}%",
+    		"format-icons": [
+    			"  ",
+    			"  ",
+    			"  ",
+    			"  ",
+    			"  "
+    		]
+        },
+        "custom/vpn": {
+           "format": "VPN: {} ",
+           "interval": 5,
+           "tooltip": "true",
+           "exec": "mullvad status | cut -d' ' -f1 | head --lines=1 "
+        },
+        "cpu": {
+            "format": "{usage}% "
+        },
+        "memory": {
+            "format": "{}% "
+        },
+        "backlight": {
+  	"device": "intel_backlight",
+  	"format": "{percent}% {icon}",
+  	"format-icons": ["", ""]
   	},
-      "custom/scratchpad-indicator": {
-          "format-text": "{}hi",
-          "return-type": "json",
-          "interval": 3,
-          "exec": "~/.local/bin/scratchpad-indicator 2> /dev/null",
-          "exec-if": "exit 0",
-          "on-click": "swaymsg 'scratchpad show'",
-          "on-click-right": "swaymsg 'move scratchpad'"
-      }
-  }
+    	"custom/power": {
+    		"format": " ",
+    		"on-click": "swaynag -t warning -m 'Power Menu Options' -b 'Logout' 'swaymsg exit' -b 'Restart' 'shutdown -r now' -b 'Shutdown'  'shutdown -h now' --background=#005566 --button-background=#009999 --button-border=#002b33 --border-bottom=#002b33"
+    	},
+        "custom/scratchpad-indicator": {
+            "format-text": "{}hi",
+            "return-type": "json",
+            "interval": 3,
+            "exec": "~/.local/bin/scratchpad-indicator 2> /dev/null",
+            "exec-if": "exit 0",
+            "on-click": "swaymsg 'scratchpad show'",
+            "on-click-right": "swaymsg 'move scratchpad'"
+        }
+    }
 #+end_src
 ***** waybar style.css
 
