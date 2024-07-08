@@ -1215,14 +1215,14 @@ Also allows checking for weasel words and passive voice irregulars
   ;; list of all themes in use
   (setq my_themes '(doom-one doom-one-light sanityinc-tomorrow-eighties doom-oceanic-next doom-molokai doom-laserwave doom-palenight doom-snazzy doom-wilmersdorf doom-outrun-electric doom-solarized-light doom-nord-light doom-tomorrow-day sanityinc-tomorrow-day))
   (defvar default-dark-theme 4)
-  (defvar default-light-theme 11)
+  (defvar default-light-theme 10)
   (defvar current_theme default-dark-theme)
   (load-theme (nth current_theme my_themes) t)
 
   (defun toggle-dark-theme ()
     (interactive)
     (disable-theme (nth current_theme my_themes))
-    (if (= current_theme 4)
+    (if (= current_theme default-dark-theme)
      (setq current_theme default-light-theme) 
      (setq current_theme default-dark-theme))
     (load-theme (nth current_theme my_themes) t)

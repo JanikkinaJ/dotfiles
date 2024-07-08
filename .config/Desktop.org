@@ -6,8 +6,6 @@
   - [[#introduction][Introduction]]
   - [[#window-manager][Window manager]]
     - [[#i3wm][i3wm]]
-    - [[#sway][Sway]]
-      - [[#waybar][waybar]]
   - [[#shell][Shell]]
     - [[#bashrc][Bashrc]]
     - [[#gitconfig][gitconfig]]
@@ -473,7 +471,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   exec --no-startup-id "xrdb -merge ~/.Xresources"
 #+end_src
 
-*** Sway
+*** COMMENT Sway
 #+begin_src conf :tangle ~/.config/sway/config
   # Default config for sway
   #
@@ -503,6 +501,9 @@ The plan is for this file to tangle multiple src blocks into the config files ne
   #
   # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
   output * bg ~/Sync/background/lightning.jpg fill
+  output eDP-1 scale 1.25
+  for_window [app_id="firefox" title="^Picture-in-Picture$"] \
+      floating enable, move position 877 450, sticky enable
   #
   # Example configuration:
   #
@@ -713,7 +714,7 @@ The plan is for this file to tangle multiple src blocks into the config files ne
         "modules-left": ["sway/workspaces", "sway/mode"],
         "modules-center": ["clock", "idle_inhibitor"],
         /* "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "custom/power"], */
-        "modules-right": ["tray", "custom/scratchpad-indicator", "cpu", "memory", "custom/vpn", "network", "pulseaudio", "battery", "custom/power"],
+        "modules-right": ["tray", "custom/scratchpad-indicator", "cpu", "memory", "custom/vpn", "network", "pulseaudio", "battery", "backlight", "custom/power"],
 
         "sway/mode": {
             "format": "<span style=\"italic\">{}</span>"
@@ -1102,6 +1103,10 @@ The plan is for this file to tangle multiple src blocks into the config files ne
    export VISUAL=vim;
    export EDITOR=vim;
 
+  # scaling of qt apps
+   export QT_AUTO_SCREEN_SCALE_FACTOR=1.5
+   export QT_ENABLE_HIGHDPI_SCALING=1.5
+   
   # Wine settings 
    export WINEARCH=win32
 
@@ -1113,6 +1118,9 @@ The plan is for this file to tangle multiple src blocks into the config files ne
    MANPATH=/usr/local/texlive/2024/texmf-dist/doc/man:$MANPATH
    export MANPATH
 
+   # Cargo
+   . "$HOME/.cargo/env"
+   
   # enables vterm to look better in emacs
   vterm_printf() {
      if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ]); then
