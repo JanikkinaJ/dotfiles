@@ -180,7 +180,19 @@ mini buffer completion
         completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
 
-**** corfu
+**** corfu - replacement for company
+[[https://github.com/minad/corfu][github]]
+[[https://www.reddit.com/r/emacs/comments/1bz0ekn/company_vertico_corfu_corfusion/][reddit explanation:]]
+#+begin_quote
+I switched to company + vertico + consult + marginalia + orderless a couple of years ago. I always run bleeding-edge emacs 30 compiled from source (I'm a glutton for punishment, been doing it that way for 30 years).
+
+Now I see corfu has become a good simpler alternative to company, but I'm unsure what the difference is between corfu & vertico, so I'm not sure if I can dump company or not. Minad says "Vertico is the minibuffer completion counterpart of Corfu" but what does that mean really?
+
+In my mind I think of company as a completion provider (on top of capf) and vertico as the UI for it. But corfu is a UI for capf, right? So do I still need vertico? And I assume I'll still need consult, I couldn't live without consult-buffer.
+
+I know I should just try it & see what happens, but any pointers would be helpful.
+#+end_quote
+
 in buffer completion
 #+begin_src emacs-lisp
   (use-package corfu
@@ -593,31 +605,38 @@ this improves the look of org agenda
 
 *** org capture
 #+begin_src emacs-lisp
-  (setq org-capture-templates
-        '(("l" "Templates for leibniz")
-  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
-           "* %?")
-  	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
-           "*  %?")
-  	("lb" "Betriebs Systeme" entry (file+datetree "~/Sync/org/roam/20240510131759-leibnizbetriebsysteme.org")
-           "*  %?")
-  	("lc" "cpp" entry (file+datetree "~/Sync/org/roam/20240513140951-leibnizcpp.org")
-           "*  %?")
-  	("la" "analysis" entry (file+datetree "~/Sync/org/roam/20240514091218-leibnizanalysis.org")
-           "*  %?")
-  	("ls" "software engineering" entry (file+datetree "~/Sync/org/roam/20240514145813-leibnizsoftwareengineering.org")
-           "*  %?")
-  	("lp" "project management" entry (file+datetree "~/Sync/org/roam/20240528131142-leibnizprojectmanagement.org")
-           "*  %?")
-          ("lk" "Komplexität" entry (file+datetree "~/Sync/org/roam/20240515090834-leibnizkomplexitat.org")
-           "*  %?")
-  	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
-           "*  %?")
-  	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
-  	 "* TODO %?")
-  	("j" "Journal" entry (file+datetree "~/Sync/org/journal.org")
-  	 "* %?")
-        ))
+    (setq org-capture-templates
+          '(("l" "Templates for leibniz")
+    	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
+             "* %?")
+    	("ll" "Lineare Algebra" entry (file+datetree "~/Sync/org/roam/20240508115829-leibnizlinalg.org")
+             "*  %?")
+    	("lb" "Betriebs Systeme" entry (file+datetree "~/Sync/org/roam/20240510131759-leibnizbetriebsysteme.org")
+             "*  %?")
+    	("lc" "cpp" entry (file+datetree "~/Sync/org/roam/20240513140951-leibnizcpp.org")
+             "*  %?")
+    	("la" "analysis" entry (file+datetree "~/Sync/org/roam/20240514091218-leibnizanalysis.org")
+             "*  %?")
+    	("ls" "software engineering" entry (file+datetree "~/Sync/org/roam/20240514145813-leibnizsoftwareengineering.org")
+             "*  %?")
+    	("lp" "project management" entry (file+datetree "~/Sync/org/roam/20240528131142-leibnizprojectmanagement.org")
+             "*  %?")
+            ("lk" "Komplexität" entry (file+datetree "~/Sync/org/roam/20240515090834-leibnizkomplexitat.org")
+             "*  %?")
+    	("ld" "Datenbanken" entry (file+datetree "~/Sync/org/roam/leibniz/20240508110332-leibnizdatenbank.org")
+             "*  %?")
+    	("n" "Templates for Nepatec")
+    	("nd" "Daily Nepatec" entry (file+datetree "~/Sync/org/roam/20240708130054-daily_nepatec.org")
+             "*  %?") 
+    	("ns" "Tobias Status" entry (file+datetree "~/Sync/org/roam/20240708131932-tobias_status.org")
+             "*  %?")
+    	("nt" "TODO nepatec" entry (file+datetree "~/Sync/org/roam/nepatec/20230725113024-NepatecTodo.org")
+             "* TODO %?") 
+    	("t" "Todo" entry (file+headline "~/Sync/org/todo.org" "Tasks")
+    	 "* TODO %?")
+    	("j" "Journal" entry (file+datetree "~/Sync/org/journal.org")
+    	 "* %?")
+          ))
 #+end_src
 
 *** ox-hugo
@@ -743,15 +762,14 @@ Here a diagramm of their functions: https://emacs-lsp.github.io/lsp-mode/tutoria
   (setq lsp-ui-sideline-enable t)
 #+end_src
 
-***** enable company -off-
-This has been replaced 
-# completion framework
-# #+begin_src emacs-lisp
-#   ;; http://company-mode.github.io/
-#   (use-package company
-#   :config
-#   (add-hook 'after-init-hook 'global-company-mode))
-# #+end_src
+***** enable company
+completion framework
+#+begin_src emacs-lisp
+  ;; http://company-mode.github.io/
+  (use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+#+end_src
 
 **** TODO Dap mode
 [[https://emacs-lsp.github.io/dap-mode/page/gallery/][dap mode for debugging]]
@@ -1332,6 +1350,7 @@ https://github.com/seagle0128/doom-modeline
   "c n" 'next-theme
   "c p" 'previous-theme
   "c s" 'scratch-buffer
+  "c v" 'evil-mode
 #+end_src
 
 ***** vterm keybindings
