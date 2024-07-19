@@ -361,7 +361,7 @@ This needs several dependencies
      (use-package citar
     :no-require
     :custom
-    (org-cite-global-bibliography '("~/Sync/Citations/Citations.bib"))
+    (org-cite-global-bibliography '("~/Sync/Citations/Zotero.bib"))
     (org-cite-insert-processor 'citar)
     (org-cite-follow-processor 'citar)
     (org-cite-activate-processor 'citar)
