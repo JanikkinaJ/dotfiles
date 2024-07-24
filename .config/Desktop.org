@@ -1904,7 +1904,8 @@ submap=reset
   separator-foreground = ${colors.disabled}
 
   modules-left = xworkspaces
-  modules-right = filesystem pulseaudio memory cpu wlan eth battery vpn-status date
+  modules-right = filesystem pulseaudio memory cpu battery vpn-status date
+  ; modules-right = filesystem pulseaudio memory cpu wlan eth battery vpn-status date
 
   cursor-click = pointer
   enable-ipc = true
