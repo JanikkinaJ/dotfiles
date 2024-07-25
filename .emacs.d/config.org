@@ -488,6 +488,9 @@ This allows me to keep track of todos
   (push '("own_time") org-tag-persistent-alist)
   (push '("emacs_config") org-tag-persistent-alist)
   (push '("leibniz") org-tag-persistent-alist)
+  (push '("Politics_DE") org-tag-persistent-alist)
+  (push '("Politics_GB") org-tag-persistent-alist)
+  (push '("Politics_US") org-tag-persistent-alist)
 
   (setq org-todo-keywords
       '((sequence "TODO(t)" "TODAY(T)" "CHECK(c)" "|" "DONE(d)")
